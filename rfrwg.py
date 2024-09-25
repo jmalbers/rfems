@@ -243,8 +243,7 @@ def setup_simulation(CSX):
         kw['NrTS'] = 0
     FDTD = openEMS(CellConstantMaterial=not average, **kw) 
     FDTD.SetGaussExcite(fo, span / 2)
-    #boundary = [ 'MUR' if args.farfield else 'PEC' ] * 6
-    boundary = ['PML_8', 'PML_8', 'MUR', 'MUR', 'PEC', 'MUR']
+    boundary = [ 'MUR' if args.farfield else 'PEC' ] * 6
     FDTD.SetBoundaryCond(boundary)
     FDTD.SetCSX(CSX)
     return FDTD

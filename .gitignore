@@ -1,3 +1,4 @@
+*.sh
 *.code-workspace
 models
 *.npz
