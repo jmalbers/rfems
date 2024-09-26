@@ -6,8 +6,8 @@ from openEMS import openEMS
 from CSXCAD import ContinuousStructure
 
 STL_TOL = .001  # mm
-STL_UNIT = 1e-3
-
+#STL_UNIT = 1e-3
+STL_UNIT = 1e-6
 
 DEFAULT_PITCH = 1e-3
 DEFAULT_POINTS = 1000  # even to ensure group delay calculation
@@ -245,8 +245,8 @@ def setup_simulation(CSX):
 
     FDTD = openEMS(CellConstantMaterial=not average, **kw) 
     FDTD.SetGaussExcite(fo, span / 2)
-    boundary = [ 'MUR' if args.farfield else 'PEC' ] * 6
-    #boundary = ['PML_8','PML_8','MUR','MUR','PEC', 'MUR']
+    #boundary = [ 'MUR' if args.farfield else 'PEC' ] * 6
+    boundary = ['PML_8','PML_8','MUR','MUR','PEC', 'MUR']
     FDTD.SetBoundaryCond(boundary)
     FDTD.SetCSX(CSX)
     return FDTD
@@ -425,7 +425,7 @@ def add_ports(FDTD, mesh, models, n):
                                       priority=priority, edges2grid=edges2grid)
         port.append(p)
 
-        #mesh.AddLine('x', [start[0], stop[0]])
+        mesh.AddLine('x', [start[0], stop[0]])
 
     return port
 
