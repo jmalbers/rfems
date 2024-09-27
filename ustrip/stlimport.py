@@ -3,6 +3,12 @@ import numpy as np
 import zipfile, tempfile, os, sys, argparse, platform, struct
 
 class StlImporter:
+    """ STL Importer
+    
+        Imports STL geometries and materials data for use with EM Solver / openEMS
+        
+        
+        """
     
     def __init__(self) -> None:
         self.stl_data  = None

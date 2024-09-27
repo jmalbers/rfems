@@ -7,7 +7,9 @@ class StripMesher:
             
             Takes CSXCAD input files describing PCB with microstrip geometry and creates mesh.
             
-            Should eventually create inhomogenous mesh via some algorithm."""
+            Should eventually create inhomogenous mesh via some algorithm.
+            
+            """
     
     def __init__(self, csx_grid, wavelen=None) -> None:
         # Sim Geometry Bounding Boxes
