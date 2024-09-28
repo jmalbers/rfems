@@ -4,28 +4,32 @@ from openEMS.physical_constants import C0
 from openEMS import openEMS
 from CSXCAD import ContinuousStructure
 
-from stlimport import StlImporter
-from stripmesher import StripMesher
+from stlimport import StlReader
+from geomaker import GeoMaker, SimGeometry
+from meshmaker import StripMesher
 
 class EMSolver:
     """EMSolver
 
-            Entry point for EMS / FDTD simulation utility using openEMS and CSXCAD
+            Entry point for openEMS / FDTD simulation utility.
 
             """
 
     def __init__(self):
-        self.importer = StlImporter()
-        self.mesher   = StripMesher()
+        self.reader    = StlReader()
+        self.geomaker  = GeoMaker()
+        self.mesher    = StripMesher()
 
-        self.fdtd     : openEMS
-        self.geometry : Geometry
+        self.geometry : SimGeometry
         self.sim_path : os.path
+        self.fdtd     : openEMS
 
         self.cf   = 1e09
         self.span = 1e08
 
     def init_sim(self, cf, span, boundary=['PEC']*6):
+        self.cf = cf
+        self.span = span
         self.fdtd = openEMS(CellConstantMaterial=False)
         self.fdtd.SetGaussExcite(cf, span / 2)
         self.fdtd.SetBoundaryCond(boundary)
@@ -57,15 +61,5 @@ class EMSolver:
     def _cal_ports(self):
         pass
 
-class Geometry:
-    def __init__(self):
-        self.csx = ContinuousStructure()
-        self.mesh = None
-        self.ports = []
 
-class MicroStrip(Geometry):
-    def __init__(self) -> None:
-        self.sub_perm = None
-        self.sub_xyz  = None
-        self.cond_mat = None
 

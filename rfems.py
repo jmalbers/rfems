@@ -16,7 +16,7 @@ DEFAULT_DPHI = 2
 DEFAULT_DTHETA = 2
 
 MATERIALS = {  # s/m
-    'silver':   { "kappa": 62.1e6 },  
+    'silver':   { "kappa": 62.1e6 },
     'copper':   { "kappa": 58.7e6 },
     'gold':     { "kappa": 44.2e6 },
     'aluminum': { "kappa": 36.9e6 },
@@ -48,7 +48,7 @@ def parse_args():
     parser.add_argument('--frequency', type=float,
         metavar='FREQ',
         help='center simulation frequency (Hz)')
-    parser.add_argument('--span', type=float, 
+    parser.add_argument('--span', type=float,
         help='simulation span, -20dB passband ends (Hz)')
     parser.add_argument('--points', type=int, default=DEFAULT_POINTS,
         help='measurement frequency points, set to 1 for center frequency')
@@ -62,19 +62,19 @@ def parse_args():
         help='default characteristic impedance of ports')
 
     pat_group = parser.add_argument_group("farfield options")
-    pat_group.add_argument('--farfield', action='store_true', 
+    pat_group.add_argument('--farfield', action='store_true',
         help='generate free-space farfield radiation patterns')
     pat_group.add_argument('--dphi', type=float, default=DEFAULT_DPHI,
         help='azimuth increment (degree)')
     pat_group.add_argument('--dtheta', type=float, default=DEFAULT_DTHETA,
         help='elevation increment (degree)')
-    pat_group.add_argument('--nominimum', action='store_true', 
+    pat_group.add_argument('--nominimum', action='store_true',
         help='do not find frequency of least VWSR')
 
     sim_group = parser.add_argument_group("openems options")
     sim_group.add_argument('--criteria', type=float,
         help='end criteria, eg -60 (dB)')
-    sim_group.add_argument('--average', action='store_true', 
+    sim_group.add_argument('--average', action='store_true',
         help='use cell material averaging')
     sim_group.add_argument('--verbose', type=int, default=0,
         help='openems verbose setting')
@@ -82,9 +82,9 @@ def parse_args():
         help='number of threads to use, 0 for all')
 
     debug_group = parser.add_argument_group("debugging options")
-    debug_group.add_argument('--show-model', action='store_true', 
+    debug_group.add_argument('--show-model', action='store_true',
         help='run AppCSXCAD on input model, no simulation')
-    debug_group.add_argument('--dump-pec', action='store_true', 
+    debug_group.add_argument('--dump-pec', action='store_true',
         help='generate PEC dump file and run ParaView on it')
     return parser.parse_args()
 
@@ -99,7 +99,7 @@ def parse_stl(filename):
     with open(filename, 'rb') as fp:
         header = fp.read(5)
         if header == b'solid':
-            facet = [] 
+            facet = []
             for ln in fp:
                 d = ln.split()
                 if d[0] == b'endfacet' and facet:
@@ -117,9 +117,9 @@ def model_bbox(data):
     stop = None
     for facet in data:
         for v in facet:
-            start = v if start is None else np.minimum(v, start) 
+            start = v if start is None else np.minimum(v, start)
             stop = v if stop is None else np.maximum(v, stop)
-    return start, stop                 
+    return start, stop
 
 
 def unzip_models(filename, dirname):
@@ -152,7 +152,7 @@ def get_portdir(name):
         if d == 'y': return 1
         if d == 'z': return 2
     value_error('No port direction provided in port name')
-    
+
 
 def get_zo(name):
     data = get_material(name).split()
@@ -198,7 +198,7 @@ def get_portnum(name):
         n = toint(d)
         if n is None:
             continue
-        if n <= 0: 
+        if n <= 0:
             value_error('Port number must be 1 or greater')
         return n
     value_error('No port number provided')
@@ -214,7 +214,7 @@ def get_simports(models):
         value_error('Ports must be numbered consecutive')
     port_start = max(0, args.start-1) if args.start else 0
     port_stop = port_start + 1 if args.stop is None else args.stop
-    port_stop = nport if port_stop == 0 else min(port_stop, nport) 
+    port_stop = nport if port_stop == 0 else min(port_stop, nport)
     port_stop = max(port_stop, port_start + 1)
     return port_start, port_stop, nport
 
@@ -241,7 +241,7 @@ def setup_simulation(CSX):
         kw['EndCriteria'] = 10 ** (args.criteria / 10)
     if args.dump_pec:
         kw['NrTS'] = 0
-    FDTD = openEMS(CellConstantMaterial=not average, **kw) 
+    FDTD = openEMS(CellConstantMaterial=not average, **kw)
     FDTD.SetGaussExcite(fo, span / 2)
     boundary = [ 'MUR' if args.farfield else 'PEC' ] * 6
     FDTD.SetBoundaryCond(boundary)
@@ -311,7 +311,7 @@ def is_applesilicon():
 
 #####################
 
-def add_parts(CSX, models): 
+def add_parts(CSX, models):
     pitch = args.pitch
     mesh = CSX.GetGrid()
     mesh.SetDeltaUnit(STL_UNIT)

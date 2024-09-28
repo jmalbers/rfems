@@ -1,38 +1,37 @@
-
 import numpy as np
 import zipfile, tempfile, os, sys, argparse, platform, struct
 
 class StlImporter:
     """ STL Importer
-    
+
         Imports STL geometries and materials data for use with EM Solver / openEMS
-        
-        
+
+
         """
-    
+
     def __init__(self) -> None:
-        self.stl_data  = None
-        self.materials = None
-        self.priority  = None
-        
-        
+        self.stl_data  = []
+        self.materials = []
+        self.priority  = []
+
+
     def parse_stl(self, filename):
-        
+
         data  = []
-        facet = [] 
+        facet = []
 
         with open(filename, 'rb') as f:
-            if f.read(5) == b'solid':
-                for ln in f:
-                    d = ln.split()
-                    if d[0] == b'endfacet' and facet:
-                        data.append(np.array(facet))
-                        facet = []
-                    if d[0] == b'vertex' and len(d) == 4:
-                        facet.append([ float(x) for x in d[1:] ])
-            else:
-                raise ValueError('binary stl files unsupported: not enough precision')
-        
+            if f.read(5) != b'solid':
+                raise ValueError(f"'{filename}' is unsupported STL format.")
+
+            for ln in f:
+                d = ln.split()
+                if d[0] == b'endfacet' and facet:
+                    data.append(np.array(facet))
+                    facet = []
+                if d[0] == b'vertex' and len(d) == 4:
+                    facet.append([ float(x) for x in d[1:] ])
+
         self.stl_data.append(data)
 
 """
