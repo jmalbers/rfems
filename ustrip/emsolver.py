@@ -9,11 +9,11 @@ from stripmesher import StripMesher
 
 class EMSolver:
     """EMSolver
-            
+
             Entry point for EMS / FDTD simulation utility using openEMS and CSXCAD
-            
+
             """
-    
+
     def __init__(self):
         self.importer = StlImporter()
         self.mesher   = StripMesher()
@@ -55,7 +55,7 @@ class EMSolver:
         pass
 
     def _cal_ports(self):
-        pass  
+        pass
 
 class Geometry:
     def __init__(self):
@@ -68,4 +68,4 @@ class MicroStrip(Geometry):
         self.sub_perm = None
         self.sub_xyz  = None
         self.cond_mat = None
-        
+
