@@ -17,12 +17,13 @@ class StlImporter:
         
         
     def parse_stl(self, filename):
-        data = []
-        with open(filename, 'rb') as fp:
-            header = fp.read(5)
-            if header == b'solid':
-                facet = [] 
-                for ln in fp:
+        
+        data  = []
+        facet = [] 
+
+        with open(filename, 'rb') as f:
+            if f.read(5) == b'solid':
+                for ln in f:
                     d = ln.split()
                     if d[0] == b'endfacet' and facet:
                         data.append(np.array(facet))
@@ -31,8 +32,10 @@ class StlImporter:
                         facet.append([ float(x) for x in d[1:] ])
             else:
                 raise ValueError('binary stl files unsupported: not enough precision')
-        return data
+        
+        self.stl_data.append(data)
 
+"""
     def unzip_models(self, filename, dirname):
         root, ext = os.path.splitext(filename)
         if ext != '.zip':
@@ -48,4 +51,4 @@ class StlImporter:
                     data[name] = path
                 else:
                     print(f'WARNING: ignoring {info.filename}, only .stl files allowed')
-        return data
+        return data"""

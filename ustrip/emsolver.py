@@ -22,6 +22,9 @@ class EMSolver:
         self.geometry : Geometry
         self.sim_path : os.path
 
+        self.cf   = 1e09
+        self.span = 1e08
+
     def init_sim(self, cf, span, boundary=['PEC']*6):
         self.fdtd = openEMS(CellConstantMaterial=False)
         self.fdtd.SetGaussExcite(cf, span / 2)
@@ -33,9 +36,9 @@ class EMSolver:
 
     def run_cadapp(self, sim_path=None):
         os.mkdir(sim_path)
-        CSX_file = os.path.join(sim_path, 'model.xml')
-        self.csx.Write2XML(CSX_file)
-        os.system('AppCSXCAD "{}"'.format(CSX_file))
+        csx_file = os.path.join(sim_path, 'model.xml')
+        self.csx.Write2XML(csx_file)
+        os.system('AppCSXCAD "{}"'.format(csx_file))
         sys.exit(0)
 
     def run_paraview(self):
