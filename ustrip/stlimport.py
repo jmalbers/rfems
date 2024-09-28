@@ -1,7 +1,8 @@
 import numpy as np
 import zipfile, tempfile, os, sys, argparse, platform, struct
+from solverlib.classes import Importer
 
-class StlImporter:
+class StlImporter(Importer):
     """ STL Importer
 
         Imports STL geometries and materials data for use with EM Solver / openEMS
@@ -9,11 +10,12 @@ class StlImporter:
 
         """
 
-    def __init__(self) -> None:
+    def __init__(self, geofunc: function) -> None:
         self.stl_data  = []
-        self.materials = []
-        self.priority  = []
+        self.to_geomaker = geofunc
 
+    def import_file(self, filename):
+        ...
 
     def parse_stl(self, filename):
 

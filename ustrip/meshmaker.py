@@ -1,7 +1,8 @@
 import numpy as np
 from CSXCAD import ContinuousStructure
+from solverlib.classes import Mesher
 
-class StripMesher:
+class StripMesher(Mesher):
 
     """ Microstrip Mesher
 
@@ -30,6 +31,9 @@ class StripMesher:
         # Mesh Outputs CSX CAD
         self.mesh      = csx_grid
         self.mesh.SetDeltaUnit(self.gunit)
+
+    def mesh_geo(self, geo):
+        ....
 
     def add_ustrip(self, start, stop):
         self.ustrip = start, stop

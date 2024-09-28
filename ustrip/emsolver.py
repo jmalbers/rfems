@@ -2,11 +2,12 @@ import numpy as np
 import zipfile, tempfile, os, sys, argparse, platform, struct
 from openEMS.physical_constants import C0
 from openEMS import openEMS
-from CSXCAD import ContinuousStructure
 
 from stlimport import StlReader
 from geomaker import GeoMaker, SimGeometry
 from meshmaker import StripMesher
+from solverlib.constants import *
+from solverlib.classes import *
 
 class EMSolver:
     """EMSolver
@@ -16,24 +17,42 @@ class EMSolver:
             """
 
     def __init__(self):
-        self.reader    = StlReader()
-        self.geomaker  = GeoMaker()
-        self.mesher    = StripMesher()
-
+        self.maker  : Maker
+        self.mesher : Mesher
+        self.reader : Importer
+        
         self.geometry : SimGeometry
-        self.sim_path : os.path
+        self.sim_path : os.path 
         self.fdtd     : openEMS
 
-        self.cf   = 1e09
-        self.span = 1e08
+        self.cf   = None
+        self.span = None
+        self.lam  = None
 
-    def init_sim(self, cf, span, boundary=['PEC']*6):
-        self.cf = cf
+    def config_EMSolver(self):
+        if self.lam is None:
+            raise RuntimeError("Frequency sweep parameters not set.")
+        
+        self.maker  = GeoMaker(USTRIP)
+        self.mesher = StripMesher(self.maker.get_csx)
+        self.reader = StlReader(self.maker.add_geo)
+
+    def config_FDTD(self, cf, span, boundary=USTRIP_BOUNDARY):
+        self.cf   = cf
         self.span = span
         self.fdtd = openEMS(CellConstantMaterial=False)
         self.fdtd.SetGaussExcite(cf, span / 2)
         self.fdtd.SetBoundaryCond(boundary)
         self.fdtd.SetCSX(self.geometry.csx)
+
+    def set_sweep(self, cf, span):
+        self.cf   = cf
+        self.span = span
+        self.lam  = C0 / (self.cf + span)
+
+    def load_zip(self, filename):
+        if _file_ok(filename):
+            self.reader.import_file(filename)
 
     def run_sim(self, verbose=False, debug_pec=False):
         self.fdtd.Run(self.sim_path, verbose=verbose, debug_pec=debug_pec)
@@ -60,6 +79,33 @@ class EMSolver:
 
     def _cal_ports(self):
         pass
+
+def _file_ok(filename) -> bool: 
+
+    for x in filename.split():
+        if x in STRUCTURES:
+            return True
+    
+    return False
+
+class Maker:
+    def __init__(self) -> None:
+        ...
+    def add_geo(self):
+        raise NotImplementedError
+    
+class Importer:
+    def __init__(self) -> None:
+        ...
+    def import_file(self, filename):
+        raise NotImplementedError
+    
+class Mesher:
+    def __init__(self) -> None:
+        ...
+    def mesh_geo(self, geo):
+        raise NotImplementedError
+    
 
 
 
