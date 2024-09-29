@@ -1,5 +1,5 @@
 import numpy as np
-import zipfile, tempfile, os, sys, argparse, platform, struct
+import zipfile, tempfile, os
 from solverlib.classes import Importer
 
 class StlImporter(Importer):
@@ -11,15 +11,17 @@ class StlImporter(Importer):
         """
 
     def __init__(self) -> None:
-        self.imports     = []
+        self.imports     = {}
         self.tmpdir      : tempfile.TemporaryDirectory
 
     def import_file(self, filename):
         if filename.endswith('.zip'):
             self.unzip_models(filename)
-        for f in self.tmpdir:
-            self.parse_stl(f)
-        self.tempdir.cleanup()
+
+        for r, _, f in os.walk(self.tmpdir.name):
+            for name in f:
+                self.parse_stl(os.path.join(r, name))
+        self.tmpdir.cleanup()
 
     def parse_stl(self, filename):
 
@@ -38,7 +40,7 @@ class StlImporter(Importer):
                 if d[0] == b'vertex' and len(d) == 4:
                     facet.append([ float(x) for x in d[1:] ])
 
-        self.imports.append([filename, data])
+        self.imports.update({filename : data})
 
     def unzip_models(self, filename):
         if not zipfile.is_zipfile(filename):
@@ -46,10 +48,10 @@ class StlImporter(Importer):
 
         zip = zipfile.ZipFile(filename)
         self.tmpdir = tempfile.TemporaryDirectory()
-
+        
         for info in zip.infolist():
             if info.is_dir():
                 continue
             root, ext = os.path.splitext(info.filename)
             if ext == '.stl':
-                zip.extract(info, path=os.path.realpath(self.tmpdir))
+                zip.extract(info, path=str(self.tmpdir.name))
