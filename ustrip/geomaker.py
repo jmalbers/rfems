@@ -13,13 +13,17 @@ class GeoMaker(Maker):
         self.geo      = MicroStrip() 
 
     def add_geo(self, geo, name):
-        ...
+        if name.endswith(".stl"):
+            self.add_stl(geo, name)
+        else:
+            raise TypeError(f"{name} not valid geometry type.")
 
     def add_stl(self, stl: np.array, name):
         ...
 
     def get_csx(self):
         return self.geo.csx
+
 
 class SimGeometry:
     def __init__(self):

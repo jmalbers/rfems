@@ -37,15 +37,15 @@ class EMSolver:
         self.mesher = StripMesher(self.maker.get_csx)
         self.reader = StlReader(self.maker.add_geo)
 
-    def config_FDTD(self, cf, span, boundary=USTRIP_BOUNDARY):
-        self.cf   = cf
-        self.span = span
+    def config_FDTD(self, boundary=USTRIP_BOUNDARY):
         self.fdtd = openEMS(CellConstantMaterial=False)
-        self.fdtd.SetGaussExcite(cf, span / 2)
+        self.fdtd.SetGaussExcite(self.cf, self.span / 2)
         self.fdtd.SetBoundaryCond(boundary)
         self.fdtd.SetCSX(self.geometry.csx)
 
     def set_sweep(self, cf, span):
+        if cf - span < 5e08:
+            raise ValueError(f"500MHz isn't RF!")
         self.cf   = cf
         self.span = span
         self.lam  = C0 / (self.cf + span)

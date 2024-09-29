@@ -15,7 +15,9 @@ class StlImporter(Importer):
         self.to_geomaker = geofunc
 
     def import_file(self, filename):
-        ...
+        if filename.endswith('.zip'):
+            ...
+            #unzip file to var, check contents file extension, parse appropriately
 
     def parse_stl(self, filename):
 
@@ -34,9 +36,9 @@ class StlImporter(Importer):
                 if d[0] == b'vertex' and len(d) == 4:
                     facet.append([ float(x) for x in d[1:] ])
 
-        self.stl_data.append(data)
+        self.stl_data.append([filename, data])
+        self.to_geomaker(filename, data)
 
-"""
     def unzip_models(self, filename, dirname):
         root, ext = os.path.splitext(filename)
         if ext != '.zip':
@@ -52,4 +54,4 @@ class StlImporter(Importer):
                     data[name] = path
                 else:
                     print(f'WARNING: ignoring {info.filename}, only .stl files allowed')
-        return data"""
+        return data
