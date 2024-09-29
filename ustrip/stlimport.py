@@ -10,14 +10,17 @@ class StlImporter(Importer):
 
         """
 
-    def __init__(self, geofunc: function) -> None:
-        self.stl_data  = []
+    def __init__(self, geofunc: function=None) -> None:
+        self.stl_data    = []
         self.to_geomaker = geofunc
+        self.tmpdir     : tempfile.TemporaryDirectory
 
     def import_file(self, filename):
         if filename.endswith('.zip'):
-            ...
-            #unzip file to var, check contents file extension, parse appropriately
+            self.unzip_models(filename)
+        for f in self.tmpdir:
+            self.parse_stl(f)
+        self.tempdir.cleanup()
 
     def parse_stl(self, filename):
 
@@ -37,21 +40,20 @@ class StlImporter(Importer):
                     facet.append([ float(x) for x in d[1:] ])
 
         self.stl_data.append([filename, data])
-        self.to_geomaker(filename, data)
 
-    def unzip_models(self, filename, dirname):
-        root, ext = os.path.splitext(filename)
-        if ext != '.zip':
-            filename = f'{root}.zip'
-        zf = zipfile.ZipFile(filename)
-        data = {}
-        for info in zf.infolist():
-            if not info.is_dir():
-                root, ext = os.path.splitext(info.filename)
-                if ext == '.stl':
-                    name = os.path.basename(root)
-                    path = zf.extract(info, dirname)
-                    data[name] = path
-                else:
-                    print(f'WARNING: ignoring {info.filename}, only .stl files allowed')
-        return data
+        if self.to_geomaker is not None:
+            self.to_geomaker(filename, data)
+
+    def unzip_models(self, filename):
+        if not zipfile.is_zipfile(filename):
+            raise TypeError(f"{filename} is not zip file.")
+
+        zip = zipfile.ZipFile(filename)
+        self.tmpdir = tempfile.TemporaryDirectory()
+
+        for info in zip.infolist():
+            if info.is_dir():
+                continue
+            root, ext = os.path.splitext(info.filename)
+            if ext == '.stl':
+                zip.extract(info, path=os.path.realpath(self.tmpdir))
