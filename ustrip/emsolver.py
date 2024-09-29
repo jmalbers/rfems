@@ -1,5 +1,5 @@
 import numpy as np
-import zipfile, tempfile, os, sys, argparse, platform, struct
+import tempfile, os, sys, argparse
 from openEMS.physical_constants import C0
 from openEMS import openEMS
 
@@ -20,9 +20,9 @@ class EMSolver:
         self.maker  : Maker
         self.mesher : Mesher
         self.reader : Importer
-        
+
         self.geometry : SimGeometry
-        self.sim_path : os.path 
+        self.sim_path : os.path
         self.fdtd     : openEMS
 
         self.cf   = None
@@ -32,10 +32,10 @@ class EMSolver:
     def config_EMSolver(self):
         if self.lam is None:
             raise RuntimeError("Frequency sweep parameters not set.")
-        
+
         self.maker  = GeoMaker(USTRIP)
-        self.mesher = StripMesher(self.maker.get_csx)
-        self.reader = StlReader(self.maker.add_geo)
+        self.mesher = StripMesher(self.cf + (self.span / 2))
+        self.reader = StlReader()
 
     def config_FDTD(self, boundary=USTRIP_BOUNDARY):
         self.fdtd = openEMS(CellConstantMaterial=False)
@@ -80,32 +80,14 @@ class EMSolver:
     def _cal_ports(self):
         pass
 
-def _file_ok(filename) -> bool: 
+def _file_ok(filename) -> bool:
 
     for x in filename.split():
         if x in STRUCTURES:
             return True
-    
+
     return False
 
-class Maker:
-    def __init__(self) -> None:
-        ...
-    def add_geo(self):
-        raise NotImplementedError
-    
-class Importer:
-    def __init__(self) -> None:
-        ...
-    def import_file(self, filename):
-        raise NotImplementedError
-    
-class Mesher:
-    def __init__(self) -> None:
-        ...
-    def mesh_geo(self, geo):
-        raise NotImplementedError
-    
 
 
 

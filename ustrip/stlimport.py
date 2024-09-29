@@ -10,10 +10,9 @@ class StlImporter(Importer):
 
         """
 
-    def __init__(self, geofunc: function=None) -> None:
-        self.stl_data    = []
-        self.to_geomaker = geofunc
-        self.tmpdir     : tempfile.TemporaryDirectory
+    def __init__(self) -> None:
+        self.imports     = []
+        self.tmpdir      : tempfile.TemporaryDirectory
 
     def import_file(self, filename):
         if filename.endswith('.zip'):
@@ -39,10 +38,7 @@ class StlImporter(Importer):
                 if d[0] == b'vertex' and len(d) == 4:
                     facet.append([ float(x) for x in d[1:] ])
 
-        self.stl_data.append([filename, data])
-
-        if self.to_geomaker is not None:
-            self.to_geomaker(filename, data)
+        self.imports.append([filename, data])
 
     def unzip_models(self, filename):
         if not zipfile.is_zipfile(filename):
