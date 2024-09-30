@@ -1,13 +1,3 @@
-class Maker:
-    def __init__(self) -> None:
-        self.geo = None
-    def add_stl(self, stl, name):
-        raise NotImplementedError
-    def add_dxf(self, dxf, name):
-        raise NotImplementedError
-    def run_appcsxcad(self):
-        raise NotImplementedError
-
 class Importer:
     def __init__(self) -> None:
         self.imports = {}

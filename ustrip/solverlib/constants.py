@@ -1,18 +1,27 @@
 # EMSolver Constants
+
+# Boundary Conditions
 PEC = 'pec'
 MUR = 'mur'
 PMC = 'pmc'
 PML_8 = 'pml_8'
-USTRIP = 'ustrip'
-CAVITY = 'cavity'
-
-X = 0
-Y = 1
-Z = 2
-
 USTRIP_BOUNDARY = PEC * 6
 CAVITY_BOUNDARY = PEC * 6
-STRUCTURES = USTRIP, CAVITY
+
+# Simulation Args
+END_CRITERIA = 'EndCriteria'
+NUM_TIMESTEPS = 'NrTS'
+PRIORITY = 'priority'
+Z0 = 'zo'
+KAPPA = 'kappa'
+EPSILON = 'epsilon'
+FILENAME_ARGS = PRIORITY, Z0, KAPPA, EPSILON
+
+# 3D Model Elements
+PORT = 'port'
+USTRIP = 'ustrip'
+SUBSTRATE = 'substrate'
+MODEL_PARTS = USTRIP, SUBSTRATE, PORT
 
 # STL Constants
 STL_TOL = .001  # mm
@@ -45,4 +54,20 @@ COLORS = {
     "aluminum": "#d0d5d9",
     "brass":    "#ac9f3c",
     "steel":    "#888b8d",
+}
+
+# Directions
+X = 'x'
+Y = 'y'
+Z = 'z'
+
+XYZ = 'xyz'
+YZ  = 'yz'
+XZ  = 'xz'
+XY  = 'xy'
+
+DIRECTIONS = {
+    X: '0',
+    Y: '1',
+    Z: '2',
 }
