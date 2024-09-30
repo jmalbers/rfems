@@ -14,7 +14,7 @@ class StlImporter(Importer):
         self.imports     = {}
         self.tmpdir      : tempfile.TemporaryDirectory
 
-    def import_file(self, filename):
+    def import_geo(self, filename):
         if filename.endswith('.zip'):
             self.unzip_models(filename)
 
@@ -48,7 +48,7 @@ class StlImporter(Importer):
 
         zip = zipfile.ZipFile(filename)
         self.tmpdir = tempfile.TemporaryDirectory()
-        
+
         for info in zip.infolist():
             if info.is_dir():
                 continue

@@ -34,6 +34,12 @@ COLORS = {
     "steel":    "#888b8d",
 }
 
+DIRECTIONS = {
+    'x': 0,
+    'y': 1,
+    'z': 2,
+}
+
 
 def parse_args():
     formatter_class = argparse.ArgumentDefaultsHelpFormatter

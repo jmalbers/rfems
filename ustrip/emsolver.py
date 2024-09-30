@@ -4,7 +4,7 @@ from openEMS.physical_constants import C0
 from openEMS import openEMS
 
 from stlimport import StlReader
-from geomaker import GeoMaker, SimGeometry
+from ustrip.planarmaker import PlanarMaker, SimGeometry
 from meshmaker import StripMesher
 from solverlib.constants import *
 from solverlib.classes import *
@@ -20,10 +20,7 @@ class EMSolver:
         self.maker  : Maker
         self.mesher : Mesher
         self.reader : Importer
-
-        self.geometry : SimGeometry
-        self.sim_path : os.path
-        self.fdtd     : openEMS
+        self.fdtd   : openEMS
 
         self.cf   = None
         self.span = None
@@ -33,15 +30,16 @@ class EMSolver:
         if self.lam is None:
             raise RuntimeError("Frequency sweep parameters not set.")
 
-        self.maker  = GeoMaker(USTRIP)
+        self.maker  = PlanarMaker(USTRIP)
         self.mesher = StripMesher(self.cf + (self.span / 2))
         self.reader = StlReader()
 
-    def config_FDTD(self, boundary=USTRIP_BOUNDARY):
+    def run_sim(self, boundary=USTRIP_BOUNDARY):
         self.fdtd = openEMS(CellConstantMaterial=False)
         self.fdtd.SetGaussExcite(self.cf, self.span / 2)
         self.fdtd.SetBoundaryCond(boundary)
-        self.fdtd.SetCSX(self.geometry.csx)
+        self.fdtd.SetCSX(self.maker.csx)
+        self.fdtd.Run(self.sim_path, verbose=verbose, debug_pec=debug_pec)
 
     def set_sweep(self, cf, span):
         if cf - span < 5e08:
@@ -52,19 +50,12 @@ class EMSolver:
 
     def load_zip(self, filename):
         if _file_ok(filename):
-            self.reader.import_file(filename)
+            self.reader.import_geo(filename)
 
-    def run_sim(self, verbose=False, debug_pec=False):
-        self.fdtd.Run(self.sim_path, verbose=verbose, debug_pec=debug_pec)
+    def open_cad(self):
+        self.maker.runappcsxcad()
 
-    def run_cadapp(self, sim_path=None):
-        os.mkdir(sim_path)
-        csx_file = os.path.join(sim_path, 'model.xml')
-        self.csx.Write2XML(csx_file)
-        os.system('AppCSXCAD "{}"'.format(csx_file))
-        sys.exit(0)
-
-    def run_paraview(self):
+    def open_paraview(self):
         os.system('paraview "PEC_dump.vtp"')
         sys.exit(0)
 

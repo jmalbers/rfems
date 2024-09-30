@@ -6,6 +6,10 @@ PML_8 = 'pml_8'
 USTRIP = 'ustrip'
 CAVITY = 'cavity'
 
+X = 0
+Y = 1
+Z = 2
+
 USTRIP_BOUNDARY = PEC * 6
 CAVITY_BOUNDARY = PEC * 6
 STRUCTURES = USTRIP, CAVITY
