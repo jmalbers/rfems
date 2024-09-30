@@ -1,66 +1,80 @@
 # EMSolver Constants
 
 # Boundary Conditions
-PEC = 'pec'
-MUR = 'mur'
-PMC = 'pmc'
+PEC   = 'pec'
+MUR   = 'mur'
+PMC   = 'pmc'
 PML_8 = 'pml_8'
+BOUNDARY_CONDITIONS = [PEC, MUR, PMC, PML_8]
 USTRIP_BOUNDARY = PEC * 6
-CAVITY_BOUNDARY = PEC * 6
 
 # Simulation Args
-END_CRITERIA = 'EndCriteria'
+END_CRITERIA  = 'EndCriteria'
 NUM_TIMESTEPS = 'NrTS'
-PRIORITY = 'priority'
-Z0 = 'zo'
-KAPPA = 'kappa'
-EPSILON = 'epsilon'
-FILENAME_ARGS = PRIORITY, Z0, KAPPA, EPSILON
+PRIORITY      = 'priority'
+Z0            = 'zo'
+KAPPA         = 'kappa'
+EPSILON       = 'epsilon'
+FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON]
 
 # 3D Model Elements
-PORT = 'port'
-USTRIP = 'ustrip'
+MSL_PORT  = 'mslport'
+RWG_PORT  = 'rwgport'
+LUM_PORT  = 'lumport'
+USTRIP    = 'ustrip'
 SUBSTRATE = 'substrate'
-MODEL_PARTS = USTRIP, SUBSTRATE, PORT
+DUMP_BOX  = 'dumpbox'
+ENCLOSURE = 'enclosure'
+PART      = 'part'
+WIRE      = 'wire'
+VALID_PARTS = [USTRIP, SUBSTRATE, MSL_PORT, RWG_PORT, LUM_PORT,
+               DUMP_BOX, ENCLOSURE, PART, WIRE]
 
 # STL Constants
 STL_TOL = .001  # mm
 STL_UNIT = 1e-3
 
 # SIM Constants
-DEFAULT_PITCH = 1e-3
-DEFAULT_POINTS = 1000  # even to ensure group delay calculation
+DEFAULT_PITCH     = 1e-3
+DEFAULT_POINTS    = 1000  # even to ensure group delay calculation
 DEFAULT_REFERENCE = 50
-DEFAULT_PRIORITY = 0
-DEFAULT_DPHI = 2
-DEFAULT_DTHETA = 2
+DEFAULT_PRIORITY  = 0
+DEFAULT_DPHI      = 2
+DEFAULT_DTHETA    = 2
 
-# Materials
-MATERIALS = {  # s/m
-    'silver':   { "kappa": 62.1e6 },
-    'copper':   { "kappa": 58.7e6 },
-    'gold':     { "kappa": 44.2e6 },
-    'aluminum': { "kappa": 36.9e6 },
-    'brass':    { "kappa": 15.9e6 },
-    'steel':    { "kappa": 10.1e6 },
+# METALS
+SILVER   = 'silver'
+COPPER   = 'copper'
+GOLD     = 'gold'
+ALUMINUM = 'aluminum'
+BRASS    = 'brass'
+STEEL    = 'steel'
+METALS = [SILVER, COPPER, GOLD, ALUMINUM, BRASS, STEEL]
+
+KAPPAS = {  # s/m
+    SILVER:   62.1e6 ,
+    COPPER:   58.7e6,
+    GOLD:     44.2e6,
+    ALUMINUM: 36.9e6,
+    BRASS:    15.9e6,
+    STEEL:    10.1e6,
 }
 
 # Colors
 COLORS = {
-    "pec":      "#dbc7b8",
-    "silver":   "#c0c0c0",
-    "copper":   "#e6be8a",
-    "gold":     "#ffd700",
-    "aluminum": "#d0d5d9",
-    "brass":    "#ac9f3c",
-    "steel":    "#888b8d",
+    PEC:      "#dbc7b8",
+    SILVER:   "#c0c0c0",
+    COPPER:   "#e6be8a",
+    GOLD:     "#ffd700",
+    ALUMINUM: "#d0d5d9",
+    BRASS:    "#ac9f3c",
+    STEEL:    "#888b8d",
 }
 
 # Directions
-X = 'x'
-Y = 'y'
-Z = 'z'
-
+X   = 'x'
+Y   = 'y'
+Z   = 'z'
 XYZ = 'xyz'
 YZ  = 'yz'
 XZ  = 'xz'
