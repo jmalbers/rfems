@@ -4,8 +4,8 @@ from openEMS.physical_constants import C0
 from openEMS import openEMS
 
 from stlimport import StlReader
-from ustrip.planarmaker import PlanarMaker
-from meshmaker import StripMesher
+from ustrip.flatgeometry import PlanarMaker
+from ustrip.stripmesher import StripMesher
 from solverlib.constants import *
 from solverlib.classes import *
 

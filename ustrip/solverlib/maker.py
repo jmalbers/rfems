@@ -2,9 +2,9 @@ import os, sys, tempfile
 
 class Maker:
     def __init__(self) -> None:
-        self.geo    = None
-        self.nparse = None
-        self.gparse = None
+        self.geo = None
+        self.np  = None
+        self.gp  = None
     def add_stl(self, stl, name):
         raise NotImplementedError
     def add_dxf(self, dxf, name):

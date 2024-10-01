@@ -15,8 +15,7 @@ USTRIP_ELEMENTS = 'ustrip', 'substrate'
 
 
 class PlanarMaker(Maker):
-    """Geometer is the thing what turns triangles into CSX"""
-    def __init__(self, rfstruct=None) -> None:
+    def __init__(self) -> None:
         self.np  = StlNameParser()
         self.dp  = StlDataParser()
         self.geo = MicroStrip()
