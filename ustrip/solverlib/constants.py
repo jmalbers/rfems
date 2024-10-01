@@ -15,9 +15,15 @@ PRIORITY      = 'priority'
 Z0            = 'zo'
 KAPPA         = 'kappa'
 EPSILON       = 'epsilon'
-FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON]
+NUMBER        = 'n'
+DIRECTION     = 'd'
+FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON, NUMBER, DIRECTION]
+PORT_ARGS     = [Z0, NUMBER, DIRECTION]
+ARG_SEPERATOR = '='
 
 # 3D Model Elements
+ELEMENT   = 'element'
+PORT      = 'port'
 MSL_PORT  = 'mslport'
 RWG_PORT  = 'rwgport'
 LUM_PORT  = 'lumport'
@@ -27,8 +33,10 @@ DUMP_BOX  = 'dumpbox'
 ENCLOSURE = 'enclosure'
 PART      = 'part'
 WIRE      = 'wire'
-VALID_PARTS = [USTRIP, SUBSTRATE, MSL_PORT, RWG_PORT, LUM_PORT,
-               DUMP_BOX, ENCLOSURE, PART, WIRE]
+VALID_ELEMENTS = [USTRIP, SUBSTRATE, PORT, MSL_PORT, RWG_PORT, LUM_PORT,
+                  DUMP_BOX, ENCLOSURE, PART, WIRE]
+PORT_TYPES     = [MSL_PORT, RWG_PORT, LUM_PORT]
+SIM_HELPER     = [DUMP_BOX]
 
 # STL Constants
 STL_TOL = .001  # mm

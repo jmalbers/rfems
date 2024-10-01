@@ -1,7 +1,7 @@
 import numpy as np
 from constants import *
 
-class StlProcessor:
+class StlDataParser:
     def __init__(self) -> None:
         ...
 
@@ -25,34 +25,51 @@ class StlProcessor:
     def get_normal(self, facet) -> np:
         pass
 
-class FilenameParser:
+class StlNameParser:
     def __init__(self) -> None:
-        ...
+        self.fn     = []
+        self.parsed = {}
+        
+    def parse_filename(self, filename):
+        self.fn = _split_name(filename)
+        if self.fn[0] not in VALID_ELEMENTS:
+            return False
+        
+        self.parsed = {}
+        self.parsed.update({ELEMENT: self.fn[0]})
+
+        if self.fn[0] in PORT_TYPES:
+            return self.parse_port()
+  
+        return self.parse_element()
+  
+    def parse_port(self):
+        ret = False
+        for i in _return_args(self.fn[1:]):
+            a, v = _get_argval(i)
+            if a in PORT_ARGS:
+                self.parsed.update({a: v})
+                ret = True
+        
+        return ret
     
-    def get_material(self, filename):
-        for i in filename.split():
-            if i in MATERIALS.keys():
-                return i
-    def get_portdir(self, filename):
-        for i in filename.split():
-            if i in DIRECTIONS.keys():
-                return i
+    def parse_element(self):
+        ret = False
+        for i in _return_args(self.fn[1:]):
+            a, v = _get_argval(i)
+            if a in FILENAME_ARGS:
+                self.parsed.update({a: v})
+                ret = True
 
-    def get_zo(self, filename):
-        return int(_get_arg(filename.split(), Z0, '='))
+        return ret
+   
+def _return_args(split_name):
+    return filter(lambda x: ARG_SEPERATOR in x, split_name)
 
-    def get_priority(self, filename) -> int:
-        return int(_get_arg(filename.split(), PRIORITY, '='))
+def _get_argval(str_in):
+        arg, _, value = str_in.partition(ARG_SEPERATOR)
+        return arg, value
 
-    def is_port(self, filename):
-        return True if PORT in filename else False
-    
-    def is_substrate(self, filename):
-        return True if SUBSTRATE in filename else False
-    
-    def is_ustrip(self, filename):
-        return True if USTRIP in filename else False
-
-def _get_arg(str_in, arg, sep):
-        arg, _, value = str_in.partition(sep)
-        return value
+def _split_name(filename) -> list:
+    spl_char = '_' if '_' in filename else ' '
+    return filename.split(spl_char)
