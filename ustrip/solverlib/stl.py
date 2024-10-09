@@ -29,20 +29,20 @@ class StlNameParser:
     def __init__(self) -> None:
         self.fn     = []
         self.parsed = {}
-        
+
     def parse_filename(self, filename):
         self.fn = _split_name(filename)
         if self.fn[0] not in VALID_ELEMENTS:
             return False
-        
+
         self.parsed = {}
         self.parsed.update({ELEMENT: self.fn[0]})
 
         if self.fn[0] in PORT_TYPES:
             return self.parse_port()
-  
+
         return self.parse_element()
-  
+
     def parse_port(self):
         ret = False
         for i in _return_args(self.fn[1:]):
@@ -50,9 +50,9 @@ class StlNameParser:
             if a in PORT_ARGS:
                 self.parsed.update({a: v})
                 ret = True
-        
+
         return ret
-    
+
     def parse_element(self):
         ret = False
         for i in _return_args(self.fn[1:]):
@@ -62,7 +62,7 @@ class StlNameParser:
                 ret = True
 
         return ret
-   
+
 def _return_args(split_name):
     return filter(lambda x: ARG_SEPERATOR in x, split_name)
 

@@ -1,3 +1,5 @@
+# EMSolver 'Worker' Classes
+
 class Importer:
     def __init__(self) -> None:
         self.imports = {}
@@ -10,42 +12,33 @@ class Mesher:
     def mesh_csx(self, csx):
         raise NotImplementedError
 
+# Simulation Geometry Classes
+
 class SimGeometry:
     def __init__(self):
-        self.csx    = None
-        self.ports  = None
-        self.simbox = None
+        self.csx      = None
+        self.elements = []
+        self.ports    = []
+        self.simbox   = []
+        self.dmpbox   = []
+
+class GeoEle:
+    def __init__(self, name, **kw) -> None:
+            self.name = name
+            self.geo  = kw['geo'] if 'geo' in kw.keys() else None
+            self.mat  = kw['mat'] if 'mat' in kw.keys() else None
+            self.num  = kw['num'] if 'num' in kw.keys() else None
+            self.pri  = kw['pri'] if 'pri' in kw.keys() else None
+            self.col  = kw['col'] if 'col' in kw.keys() else None
+            self.bbox = None
 
 class Port:
-    def __init__(self) -> None:
-        self.geo = None
-        self.num = None
-        self.dir = None
-
-class MSLPort(Port):
-    def __init_(self, geo, num, dir) -> None:
-        self.geo = geo
-        self.num = num
-        self.dir = dir
-
-class RWGPort(Port):
-    def __init_(self, geo, num, dir) -> None:
-        self.geo = geo
-        self.num = num
-        self.dir = dir
+    def __init__(self, name, geo, num, dir, **kw) -> None:
+        self.name = name
+        self.geo  = geo
+        self.num  = num
+        self.dir  = dir
+        self.exc  = kw['exc'] if 'exc' in kw.keys() else None
 
 
-class MicroStrip(SimGeometry):
-    def __init__(self) -> None:
-        self.ustrip    = None
-        self.substrate = None
 
-    class uStrip:
-        def __init__(self, geo, mat) -> None:
-            self.geo = geo
-            self.mat = mat
-
-    class Substrate:
-        def __init__(self, geo, mat) -> None:
-            self.geo = geo
-            self.mat = mat
