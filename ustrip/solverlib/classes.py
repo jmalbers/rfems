@@ -1,4 +1,5 @@
 # EMSolver 'Worker' Classes
+from constants import *
 
 class Importer:
     def __init__(self) -> None:
@@ -33,12 +34,22 @@ class GeoEle:
             self.bbox = None
 
 class Port:
-    def __init__(self, name, geo, num, dir, **kw) -> None:
-        self.name = name
-        self.geo  = geo
-        self.num  = num
-        self.dir  = dir
-        self.exc  = kw['exc'] if 'exc' in kw.keys() else None
+    def __init__(self, **kw) -> None:
+        self.name = None
+        self.geo  = None
+        self.num  = None
+        self.dir  = None
+        self.zo   = None
+        self.exc  = None
 
+        if 'pdict' in kw.keys():
+            self._load_dict(kw['pdict'])
+
+    def _load_dict(self, param):
+        self.name = param[ELEMENT] if ELEMENT in param.keys() else None
+        self.num  = param[NUMBER] if NUMBER in param.keys() else None
+        self.dir  = param[DIRECTION] if DIRECTION in param.keys() else None
+        self.z0   = param[Z0] if Z0 in param.keys() else None
+        self.exc  = param[EXCITE] if EXCITE in param.keys() else None
 
 
