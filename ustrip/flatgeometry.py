@@ -6,19 +6,19 @@
 import numpy as np
 import os, tempfile, sys
 from CSXCAD import ContinuousStructure
-import solverlib.classes as solvcla
+import solverlib.classes as emsclass
 from solverlib.constants import *
 from solverlib.maker import Maker
 from solverlib.stl import StlNameParser, StlDataParser
 
 class PlanarMaker(Maker):
     def __init__(self) -> None:
-        self.np  = StlNameParser()
-        self.dp  = StlDataParser()
-        self.geo = solvcla.SimGeometry()
+        self.namp = StlNameParser()
+        self.datp = StlDataParser()
+        self.geo  = emsclass.SimGeometry()
 
     def add_stl(self, stl: np.array, filename):
-        if not self.np.parse_filename(filename):
+        if not self.namp.parse_filename(filename):
             return False
 
         dispatch = {
@@ -36,7 +36,7 @@ class PlanarMaker(Maker):
         ...
 
     def _add_port(self, stl, filename):
-        self.geo.ports.append(solvcla.Port(self.np.parsed))
+        self.geo.ports.append(emsclass.Port(self.namp.parsed))
         # now add geo from stol
 
     def _add_element(self):

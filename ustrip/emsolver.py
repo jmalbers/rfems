@@ -2,12 +2,15 @@ import numpy as np
 import tempfile, os, sys, argparse
 from openEMS.physical_constants import C0
 from openEMS import openEMS
+from solverlib.maker import Maker
+from solverlib.classes import *
+from solverlib.constants import *
 
+# Imports for testing planar imports from stl. Remove later
 from stlimport import StlReader
 from ustrip.flatgeometry import PlanarMaker
 from ustrip.stripmesher import StripMesher
-from solverlib.constants import *
-from solverlib.classes import *
+
 
 class EMSolver:
     """EMSolver
