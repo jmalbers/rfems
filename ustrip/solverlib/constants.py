@@ -1,6 +1,11 @@
+# ---------------------------------------
 # EMSolver Constants
+# ---------------------------------------
 
+# ---------------------------------------
 # Boundary Conditions
+# ---------------------------------------
+
 PEC   = 'pec'
 MUR   = 'mur'
 PMC   = 'pmc'
@@ -8,7 +13,10 @@ PML_8 = 'pml_8'
 BOUNDARY_CONDITIONS = [PEC, MUR, PMC, PML_8]
 USTRIP_BOUNDARY = PEC * 6
 
-# Simulation Args
+# ------------------------------------------------------------------------------
+# Simulation Arguments: Command Line & Other
+# ------------------------------------------------------------------------------
+
 END_CRITERIA  = 'EndCriteria'
 NUM_TIMESTEPS = 'NrTS'
 PRIORITY      = 'priority'
@@ -24,7 +32,10 @@ FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON, NUMBER, DIRECTION, MATERIAL,
 PORT_ARGS     = [Z0, NUMBER, DIRECTION, EXCITE]
 ARG_SEPERATOR = '='
 
-# 3D Model Elements
+# ------------------------------------------------------------------------------
+# 3D Model Elements: For labeling simulation geometry
+# ------------------------------------------------------------------------------
+
 ELEMENT   = 'element'
 PORT      = 'port'
 MSL_PORT  = 'mslport'
@@ -41,11 +52,17 @@ VALID_ELEMENTS = [USTRIP, SUBSTRATE, PORT, MSL_PORT, RWG_PORT, LUM_PORT,
 PORT_TYPES     = [MSL_PORT, RWG_PORT, LUM_PORT]
 SIM_HELPER     = [DUMP_BOX]
 
+# ------------------------------------------------------------------------------
 # STL Constants
+# ------------------------------------------------------------------------------
+
 STL_TOL = .001  # mm
 STL_UNIT = 1e-3
 
+# ------------------------------------------------------------------------------
 # SIM Constants
+# ------------------------------------------------------------------------------
+
 DEFAULT_PITCH     = 1e-3
 DEFAULT_POINTS    = 1000  # even to ensure group delay calculation
 DEFAULT_REFERENCE = 50
@@ -53,7 +70,10 @@ DEFAULT_PRIORITY  = 0
 DEFAULT_DPHI      = 2
 DEFAULT_DTHETA    = 2
 
+# ------------------------------------------------------------------------------
 # METALS
+# ------------------------------------------------------------------------------
+
 SILVER   = 'silver'
 COPPER   = 'copper'
 GOLD     = 'gold'
@@ -71,7 +91,10 @@ KAPPAS = {  # s/m
     STEEL:    10.1e6,
 }
 
+# ------------------------------------------------------------------------------
 # Colors
+# ------------------------------------------------------------------------------
+
 COLORS = {
     PEC:      "#dbc7b8",
     SILVER:   "#c0c0c0",
@@ -82,7 +105,10 @@ COLORS = {
     STEEL:    "#888b8d",
 }
 
+# ------------------------------------------------------------------------------
 # Directions
+# ------------------------------------------------------------------------------
+
 X   = 'x'
 Y   = 'y'
 Z   = 'z'

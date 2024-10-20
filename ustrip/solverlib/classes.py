@@ -1,5 +1,8 @@
-# EMSolver 'Worker' Classes
 from constants import *
+
+# ------------------------------------------------------------------------------
+# EMSolver 'Worker' Classes
+# ------------------------------------------------------------------------------
 
 class Importer:
     def __init__(self) -> None:
@@ -13,7 +16,9 @@ class Mesher:
     def mesh_csx(self, csx):
         raise NotImplementedError
 
+# ------------------------------------------------------------------------------
 # Simulation Geometry Classes
+# ------------------------------------------------------------------------------
 
 class SimGeometry:
     def __init__(self):
