@@ -13,12 +13,12 @@ from solverlib.stl import StlNameParser, StlDataParser
 
 class PlanarMaker(Maker):
     def __init__(self) -> None:
-        self.namp = StlNameParser()
-        self.datp = StlDataParser()
-        self.geo  = emsclass.SimGeometry()
+        self.namep  = StlNameParser()
+        self.datap  = StlDataParser()
+        self.simgeo = emsclass.SimGeometry()
 
-    def add_stl(self, stl: np.array, filename):
-        if not self.namp.parse_filename(filename):
+    def add_stl(self, filename, stl: np.array):
+        if not self.namep.parse_filename(filename):
             return False
 
         dispatch = {
@@ -30,20 +30,29 @@ class PlanarMaker(Maker):
             DUMP_BOX:  self._add_box,
             }
 
-        dispatch.get(self.np.parsed[ELEMENT])()
+        dispatch.get(self.np.parsed[ELEMENT])(stl, filename)
 
     def add_dxf(self, dxf, geoname):
         ...
 
-    def _add_port(self, stl, filename):
-        self.geo.ports.append(emsclass.Port(self.namp.parsed))
-        # now add geo from stol
+    def _add_port(self, filename, stl):
+        start, stop = self.datap.get_bbox(stl)
+        self.simgeo.ports.append(emsclass.Port(bbox=[start, stop],
+                                            init_dict=self.namep.parsed))
+        # Add port geometry to csx from data parser input
 
-    def _add_element(self):
-        ...
+    def _add_element(self, filename, stl):
+        start, stop = self.datap.get_bbox(stl)
+        # Check if box shaped primative or polyhedron
+        # CSX add material / metal
+        self.simgeo.elements.append(emsclass.GeoEle(bbox=[start, stop],
+                                                 init_dict=self.namep.parsed))
+        # Add element geometry to csx from data parser input
 
     def _add_box(self):
         ...
+
+
 
 
 

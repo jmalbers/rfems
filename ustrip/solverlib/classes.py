@@ -29,7 +29,7 @@ class SimGeometry:
         self.dmpbox   = []
 
 class GeoEle:
-    def __init__(self, **kw) -> None:
+    def __init__(self, bbox=None, **kw) -> None:
             self.name = None
             self.num  = None
             self.mat  = None
@@ -38,6 +38,7 @@ class GeoEle:
             self.eps  = None
 
             self.col  = None
+            self.bbox = bbox
             self.geo  = None
 
             if 'init_dict' in kw.keys():
@@ -52,7 +53,7 @@ class GeoEle:
         self.eps  = param[EPSILON]  if EPSILON  in param.keys() else None
 
 class Port:
-    def __init__(self, **kw) -> None:
+    def __init__(self, bbox=None, **kw) -> None:
         self.name = None
         self.num  = None
         self.dir  = None
@@ -60,6 +61,7 @@ class Port:
         self.exc  = None
 
         self.col  = None
+        self.bbox = bbox
         self.geo  = None
 
         if 'init_dict' in kw.keys():

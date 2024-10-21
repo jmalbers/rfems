@@ -5,25 +5,18 @@ class StlDataParser:
     def __init__(self) -> None:
         ...
 
-    def get_bbox(self, data):
+    def get_bbox(self, stl_data):
         start, stop = None
-        for facet in data:
-            for v in facet:
-                start = v if start is None else np.minimum(v, start)
-                stop  = v if stop is None else np.maximum(v, stop)
+        for facet in stl_data:
+            for vertex in facet:
+                start = vertex if start is None else np.minimum(vertex, start)
+                stop  = vertex if stop is None else np.maximum(vertex, stop)
+
+        idx = np.logical_or(stop - start < STL_TOL, np.isclose(stop - start, STL_TOL))
+        start[idx] = stop[idx] = ((start + stop) / 2)[idx]
         return start, stop
 
-    def bbox_corners(self, start, stop) -> np.array:
-        ...
-        # Project start / stop 'across' space long axis (now two points per bbox face)
-        # Project shift start / stop face points up / down.
-        # Done
 
-    def is_rectocube(self, shape) -> bool:
-        ...
-
-    def get_normal(self, facet) -> np:
-        pass
 
 class StlNameParser:
     def __init__(self) -> None:
