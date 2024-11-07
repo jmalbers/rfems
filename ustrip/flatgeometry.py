@@ -17,12 +17,11 @@ class PlanarMaker(Maker):
         self.datap  = StlDataParser()
         self.simgeo = emsclass.SimGeometry()
 
-    def add_stl(self, filename, stl: np.array):
+    def add_stl(self, fdtd, filename, stl: np.array):
         if not self.namep.parse_filename(filename):
             return False
 
         dispatch = {
-            MSL_PORT:  self._add_port,
             RWG_PORT:  self._add_port,
             LUM_PORT:  self._add_port,
             USTRIP:    self._add_element,
@@ -30,18 +29,15 @@ class PlanarMaker(Maker):
             DUMP_BOX:  self._add_box,
             }
 
-        dispatch.get(self.np.parsed[ELEMENT])(stl, filename)
+        dispatch.get(self.np.parsed[ELEMENT])(fdtd, filename, stl)
 
-    def add_dxf(self, dxf, geoname):
-        ...
-
-    def _add_port(self, filename, stl):
+    def _add_port(self, fdtd, filename, stl):
         start, stop = self.datap.get_bbox(stl)
         self.simgeo.ports.append(emsclass.Port(bbox=[start, stop],
                                             init_dict=self.namep.parsed))
-        # Add port geometry to csx from data parser input
+        fdtd.AddRwgPort(1, PEC, start, stop, X, Z, excite=1, priority=10)
 
-    def _add_element(self, filename, stl):
+    def _add_element(self, fdtd, filename, stl):
         start, stop = self.datap.get_bbox(stl)
         # Check if box shaped primative or polyhedron
         # CSX add material / metal

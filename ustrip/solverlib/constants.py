@@ -38,7 +38,6 @@ ARG_SEPERATOR = '='
 
 ELEMENT   = 'element'
 PORT      = 'port'
-MSL_PORT  = 'mslport'
 RWG_PORT  = 'rwgport'
 LUM_PORT  = 'lumport'
 USTRIP    = 'ustrip'
@@ -47,9 +46,9 @@ DUMP_BOX  = 'dumpbox'
 ENCLOSURE = 'enclosure'
 PART      = 'part'
 WIRE      = 'wire'
-VALID_ELEMENTS = [USTRIP, SUBSTRATE, PORT, MSL_PORT, RWG_PORT, LUM_PORT,
+VALID_ELEMENTS = [USTRIP, SUBSTRATE, PORT, RWG_PORT, LUM_PORT,
                   DUMP_BOX, ENCLOSURE, PART, WIRE]
-PORT_TYPES     = [MSL_PORT, RWG_PORT, LUM_PORT]
+PORT_TYPES     = [RWG_PORT, LUM_PORT]
 SIM_HELPER     = [DUMP_BOX]
 
 # ------------------------------------------------------------------------------

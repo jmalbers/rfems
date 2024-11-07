@@ -6,11 +6,12 @@ from solverlib.maker import Maker
 from solverlib.classes import *
 from solverlib.constants import *
 
+# ----------------------------------------------------------------
 # Imports for testing planar imports from stl. Remove later
-from stlimport import StlReader
+from solverlib.stl import StlReader
 from ustrip.flatgeometry import PlanarMaker
 from ustrip.stripmesher import StripMesher
-
+# ----------------------------------------------------------------
 
 class EMSolver:
     """EMSolver
@@ -33,12 +34,13 @@ class EMSolver:
         if self.lam is None:
             raise RuntimeError("Frequency sweep parameters not set.")
 
-        self.maker  = PlanarMaker(USTRIP)
-        self.mesher = StripMesher(self.cf + (self.span / 2))
+        self.fdtd = openEMS(CellConstantMaterial=False)
         self.reader = StlReader()
+        self.maker  = PlanarMaker()
+        self.mesher = StripMesher(self.cf + (self.span / 2))
+
 
     def run_sim(self, boundary=USTRIP_BOUNDARY):
-        self.fdtd = openEMS(CellConstantMaterial=False)
         self.fdtd.SetGaussExcite(self.cf, self.span / 2)
         self.fdtd.SetBoundaryCond(boundary)
         self.fdtd.SetCSX(self.maker.csx)
