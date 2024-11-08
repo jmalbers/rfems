@@ -64,6 +64,8 @@ class Port:
         self.bbox = bbox
         self.geo  = None
 
+        self.ems  = None
+
         if 'init_dict' in kw.keys():
             self._load_dict(kw['init_dict'])
 

@@ -27,6 +27,7 @@ NUMBER        = 'n'
 DIRECTION     = 'd'
 EXCITE        = 'excite'
 MATERIAL      = 'mat'
+TE10          = 'te10'
 FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON, NUMBER, DIRECTION, MATERIAL,
                  EXCITE]
 PORT_ARGS     = [Z0, NUMBER, DIRECTION, EXCITE]

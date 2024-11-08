@@ -58,6 +58,12 @@ class StlImporter(Importer):
                 zip.extract(info, path=str(self.tmpdir.name))
 
 class StlDataParser:
+    """ STL Data Parser
+
+        Parses STL geometric data for bounding boxes, facet normal, etc
+
+
+        """
     def __init__(self) -> None:
         ...
 
@@ -72,7 +78,27 @@ class StlDataParser:
         start[idx] = stop[idx] = ((start + stop) / 2)[idx]
         return start, stop
 
+    def get_rwgport_bbox(self, stl_data):
+        start, stop = None
+        for facet in stl_data:
+            for vertex in facet:
+                start = vertex if start is None else np.minimum(vertex, start)
+                stop  = vertex if stop is None else np.maximum(vertex, stop)
+
+    def get_rwgport_dim(self, pdir, start, stop):
+        dirs = DIRECTIONS.values()
+        dirs.remove(pdir)
+        dims = [abs(start[d]) + stop[d] for d in dirs]
+        return max(dims), min(dims)
+
+
 class StlNameParser:
+    """ STL Filename Parser
+
+        Parses STL filename to retrieve modeling and simulation parameters.
+
+
+        """
     def __init__(self) -> None:
         self.fn     = []
         self.parsed = {}

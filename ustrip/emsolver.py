@@ -34,7 +34,7 @@ class EMSolver:
         if self.lam is None:
             raise RuntimeError("Frequency sweep parameters not set.")
 
-        self.fdtd = openEMS(CellConstantMaterial=False)
+        self.fdtd   = openEMS(CellConstantMaterial=False)
         self.reader = StlReader()
         self.maker  = PlanarMaker()
         self.mesher = StripMesher(self.cf + (self.span / 2))
