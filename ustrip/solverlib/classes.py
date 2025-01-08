@@ -26,6 +26,7 @@ class SimGeometry:
         self.elements = []
         self.ports    = []
         self.simbox   = []
+        self.mshbox   = []
         self.dmpbox   = []
 
 class GeoEle:

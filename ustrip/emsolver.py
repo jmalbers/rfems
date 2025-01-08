@@ -2,7 +2,7 @@ import numpy as np
 import tempfile, os, sys, argparse
 from openEMS.physical_constants import C0
 from openEMS import openEMS
-from solverlib.maker import Maker
+from solverlib.maker import CSXMaker
 from solverlib.classes import *
 from solverlib.constants import *
 
@@ -21,7 +21,7 @@ class EMSolver:
             """
 
     def __init__(self):
-        self.maker  : Maker
+        self.maker  : CSXMaker
         self.mesher : Mesher
         self.reader : Importer
         self.fdtd   : openEMS
