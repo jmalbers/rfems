@@ -102,7 +102,7 @@ class StlNameParser:
         self.parsed = {}
 
     def parse_filename(self, filename):
-        self.fn = _split_name(filename)
+        self.fn = self._split_name(filename)
         if self.fn[0] not in VALID_ELEMENTS:
             return False
 
@@ -116,8 +116,8 @@ class StlNameParser:
 
     def parse_port(self):
         ret = False
-        for i in _return_args(self.fn[1:]):
-            a, v = _get_argval(i)
+        for i in self._return_args(self.fn[1:]):
+            a, v = self._get_argval(i)
             if a in PORT_ARGS:
                 self.parsed.update({a: v})
                 ret = True
@@ -126,21 +126,21 @@ class StlNameParser:
 
     def parse_element(self):
         ret = False
-        for i in _return_args(self.fn[1:]):
-            a, v = _get_argval(i)
+        for i in self._return_args(self.fn[1:]):
+            a, v = self._get_argval(i)
             if a in FILENAME_ARGS:
                 self.parsed.update({a: v})
                 ret = True
 
         return ret
 
-def _return_args(split_name):
-    return filter(lambda x: ARG_SEPERATOR in x, split_name)
+    def _return_args(self, split_name):
+        return filter(lambda x: ARG_SEPERATOR in x, split_name)
 
-def _get_argval(str_in):
+    def _get_argval(self, str_in):
         arg, _, value = str_in.partition(ARG_SEPERATOR)
         return arg, value
 
-def _split_name(filename) -> list:
-    spl_char = '_' if '_' in filename else ' '
-    return filename.split(spl_char)
+    def _split_name(self, filename) -> list:
+        spl_char = '_' if '_' in filename else ' '
+        return filename.split(spl_char)
