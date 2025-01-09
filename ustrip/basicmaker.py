@@ -1,5 +1,4 @@
 import numpy as np
-import os, tempfile, sys
 from CSXCAD import ContinuousStructure
 import solverlib.classes as emsclass
 from solverlib.constants import *
@@ -18,7 +17,6 @@ class BasicMaker(CSXMaker):
 
         dispatch = {
             RWG_PORT:  self._add_rwgport,
-            LUM_PORT:  self._add_lumport,
             USTRIP:    self._add_element,
             SUBSTRATE: self._add_element,
             }
@@ -29,13 +27,6 @@ class BasicMaker(CSXMaker):
         self.simgeo.csx = ContinuousStructure()
         self._draw_elements()
 
-    #def show_csx(self):
-    #    tmpdir = tempfile.TemporaryDirectory()
-    #    csx_file = os.path.join(str(self.tmpdir.name), 'model.xml')
-    #    self.simgeo.csx.Write2XML(csx_file)
-    #    os.system('AppCSXCAD "{}"'.format(csx_file))
-    #    sys.exit(0)
-
     def _add_rwgport(self, fdtd, filename, stl):
         start, stop = self._datap.get_rwgport_bbox(stl)
         p = emsclass.Port(bbox=[start, stop],
@@ -44,9 +35,6 @@ class BasicMaker(CSXMaker):
         p.ems = fdtd.AddRectWaveGuidePort(p.num, start, stop, p.dir,
                                           p_w, p_h, TE10, p.exc)
         self.simgeo.ports.append(p)
-
-    def _add_lumport(self, fdtd, filename, stl):
-       ...
 
     def _add_element(self, fdtd, filename, stl):
         start, stop = self._datap.get_bbox(stl)

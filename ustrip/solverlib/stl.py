@@ -1,7 +1,7 @@
 import numpy as np
 import zipfile, tempfile, os
 from solverlib.classes import Importer
-from constants import *
+from solverlib.constants import *
 
 class StlImporter(Importer):
     """ STL Importer
@@ -10,7 +10,6 @@ class StlImporter(Importer):
 
 
         """
-
     def __init__(self) -> None:
         self.imports     = {}
         self.tmpdir      : tempfile.TemporaryDirectory
@@ -41,7 +40,8 @@ class StlImporter(Importer):
                 if d[0] == b'vertex' and len(d) == 4:
                     facet.append([ float(x) for x in d[1:] ])
 
-        self.imports.update({filename : data})
+        fn = os.path.splitext(os.path.split(filename)[1])[0]
+        self.imports.update({os.path.split(fn)[1] : data})
 
     def unzip_models(self, filename):
         if not zipfile.is_zipfile(filename):

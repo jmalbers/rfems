@@ -15,5 +15,11 @@ class CSXMaker:
             self.simgeo.csx.Write2XML(model_path)
             os.system('AppCSXCAD "{}"'.format(model_path))
             sys.exit(0)
+    #def show_csx(self):
+    #    tmpdir = tempfile.TemporaryDirectory()
+    #    csx_file = os.path.join(str(self.tmpdir.name), 'model.xml')
+    #    self.simgeo.csx.Write2XML(csx_file)
+    #    os.system('AppCSXCAD "{}"'.format(csx_file))
+    #    sys.exit(0)
 
 

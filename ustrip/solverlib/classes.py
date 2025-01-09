@@ -1,4 +1,4 @@
-from constants import *
+from solverlib.constants import *
 
 # ------------------------------------------------------------------------------
 # EMSolver 'Worker' Classes

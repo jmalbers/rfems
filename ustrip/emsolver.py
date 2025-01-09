@@ -9,8 +9,8 @@ from solverlib.constants import *
 # ----------------------------------------------------------------
 # Imports for testing planar imports from stl. Remove later
 from solverlib.stl import StlReader
-from ustrip.flatgeometry import PlanarMaker
-from ustrip.stripmesher import StripMesher
+from ustrip.basicmaker import PlanarMaker
+from ustrip.basicmesher import StripMesher
 # ----------------------------------------------------------------
 
 class EMSolver:
@@ -30,14 +30,15 @@ class EMSolver:
         self.span = None
         self.lam  = None
 
+        self.simgeo = None
+
     def config_EMSolver(self):
         if self.lam is None:
             raise RuntimeError("Frequency sweep parameters not set.")
 
         self.fdtd   = openEMS(CellConstantMaterial=False)
         self.reader = StlReader()
-        self.maker  = PlanarMaker()
-        self.mesher = StripMesher(self.cf + (self.span / 2))
+        self.maker  = CSXMaker()
 
 
     def run_sim(self, boundary=USTRIP_BOUNDARY):
@@ -58,7 +59,7 @@ class EMSolver:
             self.reader.import_geo(filename)
 
     def open_cad(self):
-        self.maker.runappcsxcad()
+        self.maker.run_appcsxcad()
 
     def open_paraview(self):
         os.system('paraview "PEC_dump.vtp"')
