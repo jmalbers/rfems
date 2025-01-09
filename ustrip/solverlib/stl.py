@@ -17,11 +17,11 @@ class StlImporter(Importer):
     def import_geo(self, filename):
         if filename.endswith('.zip'):
             self.unzip_models(filename)
-
-        for r, _, f in os.walk(self.tmpdir.name):
-            for name in f:
-                self.parse_stl(os.path.join(r, name))
-        self.tmpdir.cleanup()
+            
+            for r, _, f in os.walk(self.tmpdir.name):
+                for name in f:
+                    self.parse_stl(os.path.join(r, name))
+            self.tmpdir.cleanup()
 
     def parse_stl(self, filename):
 
@@ -44,8 +44,6 @@ class StlImporter(Importer):
         self.imports.update({os.path.split(fn)[1] : data})
 
     def unzip_models(self, filename):
-        if not zipfile.is_zipfile(filename):
-            raise TypeError(f"{filename} is not zip file.")
 
         zip = zipfile.ZipFile(filename)
         self.tmpdir = tempfile.TemporaryDirectory()

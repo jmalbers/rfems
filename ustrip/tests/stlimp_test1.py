@@ -1,32 +1,37 @@
 import sys
 import os
-import logging
 import unittest
+import zipfile
 
-logger = logging.getLogger(__file__)
 sys.path.append("../")
 from solverlib.stl import StlImporter
 
+FILE_PATH = 'test_files/'
+STL_FILE = 'imp_test1.stl'
+ZIP_FILE = 'ziptest.zip'
+ZIP_CONTENTS = 'substrate'
 
-FILENAME = 'imp_test1.stl'
-STL_PATH = 'test_files/'
-
-class TestStlImporter(unittest.TestCase):
+class TestStlImporterBasic(unittest.TestCase):
 
     def setUp(self):
-        self.imp = StlImporter()
-        logger.info('Importer initialized!')
+        self.uut = StlImporter()
 
-    def test_triangleCount(self):
-        self.imp.parse_stl(STL_PATH + FILENAME)
-        logger.info('STL parsed.')
-        tri = len(self.imp.imports[os.path.splitext(FILENAME)[0]])
+    def test_parse_stl(self):
+        self.uut.parse_stl(FILE_PATH + STL_FILE)
+        tri = len(self.uut.imports[os.path.splitext(STL_FILE)[0]])
         self.assertEqual(tri, 12, f'Expected 12 trianges got {tri}')
-        logger.info(f'SUCCESS: {tri} triangles parsed from {FILENAME}!')
 
-    def test_notZip(self):
-        with self.assertRaises(TypeError):
-            self.imp.unzip_models(STL_PATH + FILENAME)
+    def test_open_bad_zip(self):
+        with self.assertRaises(zipfile.BadZipFile):
+            self.uut.unzip_models(FILE_PATH + STL_FILE)
+
+    def test_open_zip(self):
+        self.uut.unzip_models(FILE_PATH + ZIP_FILE)
+        self.uut.tmpdir.cleanup()
+
+    def test_import_geo_zip(self):
+        self.uut.import_geo(FILE_PATH+ZIP_FILE)
+        self.assertTrue(ZIP_CONTENTS in self.uut.imports.keys()) 
 
 if __name__ == "__main__":
     unittest.main()
