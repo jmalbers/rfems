@@ -66,7 +66,7 @@ class StlDataParser:
         ...
 
     def get_bbox(self, stl_data):
-        start, stop = None
+        start, stop = 0,0
         for facet in stl_data:
             for vertex in facet:
                 start = vertex if start is None else np.minimum(vertex, start)
@@ -77,16 +77,12 @@ class StlDataParser:
         return start, stop
 
     def get_rwgport_bbox(self, stl_data):
-        start, stop = None
-        for facet in stl_data:
-            for vertex in facet:
-                start = vertex if start is None else np.minimum(vertex, start)
-                stop  = vertex if stop is None else np.maximum(vertex, stop)
+        return self.get_bbox
 
     def get_rwgport_dim(self, pdir, start, stop):
-        dirs = DIRECTIONS.values()
+        dirs = list(DIRECTIONS.values())
         dirs.remove(pdir)
-        dims = [abs(start[d]) + stop[d] for d in dirs]
+        dims = [abs(start[i]) + abs(stop[i]) for i in range(0, 2)]
         return max(dims), min(dims)
 
 
