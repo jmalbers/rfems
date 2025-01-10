@@ -19,7 +19,7 @@ USTRIP_BOUNDARY = PEC * 6
 
 END_CRITERIA  = 'EndCriteria'
 NUM_TIMESTEPS = 'NrTS'
-PRIORITY      = 'priority'
+PRIORITY      = 'pri'
 Z0            = 'zo'
 KAPPA         = 'kappa'
 EPSILON       = 'epsilon'

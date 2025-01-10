@@ -80,6 +80,7 @@ class StlDataParser:
         return self.get_bbox
 
     def get_rwgport_dim(self, pdir, start, stop):
+        # Possible error: bbox indices may not line up with DIRECTIONS constant
         dirs = list(DIRECTIONS.values())
         dirs.remove(pdir)
         dims = [abs(start[i]) + abs(stop[i]) for i in range(0, 2)]
@@ -131,7 +132,7 @@ class StlNameParser:
         return ret
 
     def _return_args(self, split_name):
-        return filter(lambda x: ARG_SEPERATOR in x, split_name)
+        return list(filter(lambda x: ARG_SEPERATOR in x, split_name))
 
     def _get_argval(self, str_in):
         arg, _, value = str_in.partition(ARG_SEPERATOR)
