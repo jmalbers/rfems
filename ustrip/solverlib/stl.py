@@ -67,6 +67,7 @@ class StlDataParser:
 
     def get_bbox(self, stl_data):
         start, stop = 0,0
+
         for facet in stl_data:
             for vertex in facet:
                 start = vertex if start is None else np.minimum(vertex, start)
@@ -128,7 +129,7 @@ class StlNameParser:
             if a in FILENAME_ARGS:
                 self.parsed.update({a: v})
                 ret = True
-
+            # add 'else warn about bad arg'
         return ret
 
     def _return_args(self, split_name):

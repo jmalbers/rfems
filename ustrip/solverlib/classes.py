@@ -22,7 +22,6 @@ class Mesher:
 
 class SimGeometry:
     def __init__(self):
-        self.csx      = None
         self.elements = []
         self.ports    = []
         self.simbox   = []
@@ -30,51 +29,48 @@ class SimGeometry:
         self.dmpbox   = []
 
 class GeoEle:
-    def __init__(self, bbox=None, **kw) -> None:
-            self.name = None
-            self.num  = None
-            self.mat  = None
-            self.pri  = None
-            self.kap  = None
-            self.eps  = None
-
-            self.col  = None
-            self.bbox = bbox
+    def __init__(self) -> None:
+            self.name     = None
+            self.number   = None
+            self.material = None
+            self.priority = None
+            self.kappa    = None
+            self.epsilon  = None
+            self.color    = None
+            
             self.geo  = None
+            self.bbox = None
 
-            if 'init_dict' in kw.keys():
-                 self._load_dict(kw['init_dict'])
-
-    def _load_dict(self, param):
-        self.name = param[ELEMENT]  if ELEMENT  in param.keys() else None
-        self.num  = param[NUMBER]   if NUMBER   in param.keys() else None
-        self.mat  = param[MATERIAL] if MATERIAL in param.keys() else None
-        self.pri  = param[PRIORITY] if PRIORITY in param.keys() else None
-        self.kap  = param[KAPPA]    if KAPPA    in param.keys() else None
-        self.eps  = param[EPSILON]  if EPSILON  in param.keys() else None
+    def load_dict(self, idict):
+        self.name     = idict[ELEMENT]  if ELEMENT  in idict.keys() else None
+        self.number   = idict[NUMBER]   if NUMBER   in idict.keys() else None
+        self.material = idict[MATERIAL] if MATERIAL in idict.keys() else None
+        self.priority = idict[PRIORITY] if PRIORITY in idict.keys() else None
+        self.kappa    = idict[KAPPA]    if KAPPA    in idict.keys() else None
+        self.epsilon  = idict[EPSILON]  if EPSILON  in idict.keys() else None
+        self.color    = idict[COLOR]    if COLOR  in idict.keys() else None
 
 class Port:
     def __init__(self, bbox=None, **kw) -> None:
-        self.name = None
-        self.num  = None
-        self.dir  = None
-        self.zo   = None
-        self.exc  = None
-
-        self.col  = None
-        self.bbox = bbox
-        self.geo  = None
-
-        self.ems  = None
+        self.name      = None
+        self.number    = None
+        self.direction = None
+        self.zo        = None
+        self.excite    = None
+        self.color = None
+        
+        self.bbox  = bbox
+        self.geo   = None
+        self.port  = None
 
         if 'init_dict' in kw.keys():
             self._load_dict(kw['init_dict'])
 
     def _load_dict(self, param):
-        self.name = param[ELEMENT]   if ELEMENT   in param.keys() else None
-        self.num  = param[NUMBER]    if NUMBER    in param.keys() else None
-        self.dir  = param[DIRECTION] if DIRECTION in param.keys() else None
-        self.z0   = param[Z0]        if Z0        in param.keys() else None
-        self.exc  = param[EXCITE]    if EXCITE    in param.keys() else None
+        self.name      = param[ELEMENT]   if ELEMENT   in param.keys() else None
+        self.number    = param[NUMBER]    if NUMBER    in param.keys() else None
+        self.direction = param[DIRECTION] if DIRECTION in param.keys() else None
+        self.z0        = param[Z0]        if Z0        in param.keys() else None
+        self.excite    = param[EXCITE]    if EXCITE    in param.keys() else None
 
 

@@ -8,16 +8,16 @@ import numpy as np
 
 
 FILE_PATH = 'test_files/'
-STL_FILE = 'imp_test1.stl'
+STL_FILE  = 'imp_test1.stl'
 
-BBOX_START = np.array([-45., -1., 0.])
-BBOX_STOP  = np.array([45., 1., 1.67])
+BBOX_START       = np.array([-45., -1., 0.])
+BBOX_STOP        = np.array([45., 1., 1.67])
 BBOX_STOP_PLANAR = np.array([45., 1., STL_TOL])
 
-RWG_BBOX_START = np.array([-20., -5., 0.])
-RWG_BBOX_STOP  = np.array([20., 5., 1.])
-RWG_WIDTH = 40.0
-RWG_HEIGHT = 10.0
+RWG_BBOX_START   = np.array([-20., -5., 0.])
+RWG_BBOX_STOP    = np.array([20., 5., 1.])
+RWG_WIDTH        = 40.0
+RWG_HEIGHT       = 10.0
 
 
 class TestStlDataParserBasic(unittest.TestCase):

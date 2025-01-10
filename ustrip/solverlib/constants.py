@@ -28,8 +28,9 @@ DIRECTION     = 'd'
 EXCITE        = 'excite'
 MATERIAL      = 'mat'
 TE10          = 'te10'
+COLOR         = 'color'
 FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON, NUMBER, DIRECTION, MATERIAL,
-                 EXCITE]
+                 EXCITE, COLOR]
 PORT_ARGS     = [Z0, NUMBER, DIRECTION, EXCITE]
 ARG_SEPERATOR = '='
 
@@ -95,6 +96,8 @@ KAPPAS = {  # s/m
 # Colors
 # ------------------------------------------------------------------------------
 
+RED = 'red'
+
 COLORS = {
     PEC:      "#dbc7b8",
     SILVER:   "#c0c0c0",
@@ -103,6 +106,7 @@ COLORS = {
     ALUMINUM: "#d0d5d9",
     BRASS:    "#ac9f3c",
     STEEL:    "#888b8d",
+    RED  :    "#ff0000"
 }
 
 # ------------------------------------------------------------------------------

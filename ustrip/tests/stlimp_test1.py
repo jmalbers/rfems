@@ -6,9 +6,9 @@ import zipfile
 sys.path.append("../")
 from solverlib.stl import StlImporter
 
-FILE_PATH = 'test_files/'
-STL_FILE = 'imp_test1.stl'
-ZIP_FILE = 'ziptest.zip'
+FILE_PATH    = 'test_files/'
+STL_FILE     = 'imp_test1.stl'
+ZIP_FILE     = 'ziptest.zip'
 ZIP_CONTENTS = 'substrate'
 
 class TestStlImporterBasic(unittest.TestCase):
