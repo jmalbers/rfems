@@ -1,4 +1,4 @@
-import numpy as np
+import tempfile
 from CSXCAD import ContinuousStructure
 import solverlib.classes as emsclass
 from solverlib.constants import *
@@ -45,20 +45,27 @@ class BasicMaker(CSXMaker):
         self.simgeo.elements.append(e)
 
     def _draw_element(self, ele):
-
-        mat = self.csx.AddMetal(ele.material) if ele.material in METALS else \
-              self.csx.AddMaterial(ele.material)
+        print(ele.color)
+        mat = self.csx.AddMetal(ele.name)
+        #if ele.material in METALS else \
+        #      self.csx.AddMaterial(ele.material)
         mat.SetColor(ele.color)
 
         #if np.any(np.isclose(ele.bbox[1] - ele.bbox[0]), 0):
-        #    mat.AddBox(x.bbox[0], x.bbox[1], priority=x.pri)
+        #    mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
         #    continue
-
-        ## Polyhedron reader needs an actual file to read not np array
-        ## Need to add bytes.io attribute to retain ability to read with polyreader
-        ## Importer needs class or? 
-        prim = mat.AddPolyhedronReader(ele.geo[0], priority=int(ele.priority))
-        prim.ReadFile()
+        
+        with tempfile.TemporaryDirectory() as dirname:
+            tfname = f'{dirname}/{ele.name}_{ele.number}.stl'   
+            f = open(tfname, 'wb')
+            ele.istl.stl_byio.seek(0)
+            f.write(ele.istl.stl_byio.read())
+            f.seek(0)
+            f.close()
+            with open(tfname, 'rb') as test:
+                print(test.read())
+            prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
+            prim.ReadFile()
 
 
 

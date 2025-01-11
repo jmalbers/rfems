@@ -30,6 +30,17 @@ class TestBasicMakerBasic(unittest.TestCase):
         self.assertEqual(self.uut.simgeo.elements[0].material, 'copper')
         self.assertEqual(self.uut.simgeo.elements[0].priority, '3')
 
-        
+    def test_draw_element(self):
+        self.uut._add_element(self.istl)
+        self.uut.simgeo.elements[0].color = COLORS[RED]
+        self.uut._draw_element(self.uut.simgeo.elements[0])
+    
+    @unittest.skip
+    def test_runapp_csxcad(self):
+        self.uut._add_element(self.istl)
+        self.uut.simgeo.elements[0].color = COLORS[RED]
+        self.uut._draw_element(self.uut.simgeo.elements[0])
+        self.uut.run_appcsxcad()
+
 if __name__ == "__main__":
     unittest.main()

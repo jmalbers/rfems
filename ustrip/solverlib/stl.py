@@ -49,14 +49,14 @@ class StlImporter(Importer):
         data  = []
         facet = []
 
-        with stl_byio as f:
-            for ln in f:
-                d = ln.split()
-                if d[0] == b'endfacet' and facet:
-                    data.append(np.array(facet))
-                    facet = []
-                if d[0] == b'vertex' and len(d) == 4:
-                    facet.append([ float(x) for x in d[1:]])
+        f = stl_byio
+        for ln in f:
+            d = ln.split()
+            if d[0] == b'endfacet' and facet:
+                data.append(np.array(facet))
+                facet = []
+            if d[0] == b'vertex' and len(d) == 4:
+                facet.append([ float(x) for x in d[1:]])
 
         return data
 
