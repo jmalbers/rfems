@@ -38,7 +38,7 @@ class GeoEle:
             self.epsilon  = None
             self.color    = None
             
-            self.geo  = None
+            self.istl = None
             self.bbox = None
 
     def load_dict(self, idict):

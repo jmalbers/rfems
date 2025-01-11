@@ -2,7 +2,7 @@ import sys
 import unittest
 
 sys.path.append("../")
-from solverlib.stl import StlDataParser, StlImporter
+from solverlib.stl import StlDataExtractor, StlImporter
 from solverlib.constants import DIRECTIONS, STL_TOL
 import numpy as np
 
@@ -25,12 +25,12 @@ class TestStlDataParserBasic(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.imp = StlImporter()
-        cls.uut = StlDataParser()
-        cls.imp.parse_stl(FILE_PATH + STL_FILE)
-        cls.stl = cls.imp.imports[STL_FILE.split('.')[0]]
+        cls.uut = StlDataExtractor()
+        cls.stl = cls.imp.import_stl(FILE_PATH + STL_FILE)
+        cls.stl.stl_data = cls.imp._make_npdata(cls.stl.stl_byio)
 
     def test_get_bbox3d(self):
-        _start, _stop = self.uut.get_bbox(self.stl)
+        _start, _stop = self.uut.get_bbox(self.stl.stl_data)
         self.assertTrue(np.all(np.equal(_start, BBOX_START)))
         self.assertTrue(np.all(np.equal(_stop, BBOX_STOP)))
 

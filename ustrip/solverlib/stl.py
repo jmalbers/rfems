@@ -1,7 +1,15 @@
 import numpy as np
 import zipfile, tempfile, os
+from io import BytesIO
+import warnings
 from solverlib.classes import Importer
 from solverlib.constants import *
+
+class ImportedStl:
+    def __init__(self):
+        self.filename = ''
+        self.stl_byio = None
+        self.stl_data = None
 
 class StlImporter(Importer):
     """ STL Importer
@@ -11,40 +19,48 @@ class StlImporter(Importer):
 
         """
     def __init__(self) -> None:
-        self.imports     = {}
-        self.tmpdir      : tempfile.TemporaryDirectory
+        self.imports = []
+        self.tmpdir  : tempfile.TemporaryDirectory
 
-    def import_geo(self, filename):
-        if filename.endswith('.zip'):
-            self.unzip_models(filename)
+    def import_zip(self, filename):
+        self._unzip_models(filename)
             
-            for r, _, f in os.walk(self.tmpdir.name):
-                for name in f:
-                    self.parse_stl(os.path.join(r, name))
-            self.tmpdir.cleanup()
+        for r, _, f in os.walk(self.tmpdir.name):
+            for name in f:
+                imp = self.import_stl(os.path.join(r, name))
+                imp.stl_data = self._make_npdata(imp.stl_byio)
+                self.imports.append(imp)
 
-    def parse_stl(self, filename):
+        self.tmpdir.cleanup()
 
-        data  = []
-        facet = []
+    def import_stl(self, filename):
+        imp = ImportedStl()
+        imp.filename = os.path.splitext(os.path.split(filename)[1])[0]
 
         with open(filename, 'rb') as f:
             if f.read(5) != b'solid':
                 raise ValueError(f"'{filename}' is unsupported STL format.")
+            
+            imp.stl_byio = BytesIO(f.read())
+        
+        return imp
 
+    def _make_npdata(self, stl_byio: BytesIO):
+        data  = []
+        facet = []
+
+        with stl_byio as f:
             for ln in f:
                 d = ln.split()
                 if d[0] == b'endfacet' and facet:
                     data.append(np.array(facet))
                     facet = []
                 if d[0] == b'vertex' and len(d) == 4:
-                    facet.append([ float(x) for x in d[1:] ])
+                    facet.append([ float(x) for x in d[1:]])
 
-        fn = os.path.splitext(os.path.split(filename)[1])[0]
-        self.imports.update({os.path.split(fn)[1] : data})
+        return data
 
-    def unzip_models(self, filename):
-
+    def _unzip_models(self, filename):
         zip = zipfile.ZipFile(filename)
         self.tmpdir = tempfile.TemporaryDirectory()
 
@@ -55,7 +71,7 @@ class StlImporter(Importer):
             if ext == '.stl':
                 zip.extract(info, path=str(self.tmpdir.name))
 
-class StlDataParser:
+class StlDataExtractor:
     """ STL Data Parser
 
         Parses STL geometric data for bounding boxes, facet normal, etc
@@ -88,48 +104,48 @@ class StlDataParser:
         return max(dims), min(dims)
 
 
-class StlNameParser:
+class StlArgsExtractor:
     """ STL Filename Parser
 
         Parses STL filename to retrieve modeling and simulation parameters.
 
 
+        This really needs to just parse strings and return values rather than 
+        store stuff.
+
         """
     def __init__(self) -> None:
-        self.fn     = []
-        self.parsed = {}
+        ...
 
-    def parse_filename(self, filename):
-        self.fn = self._split_name(filename)
-        if self.fn[0] not in VALID_ELEMENTS:
-            return False
+    def get_filename_args(self, filename):
+        fn = self._split_name(filename)
+        if fn[0] not in VALID_ELEMENTS:
+            raise TypeError(f"'{fn}' is invalid sim element.")
+        
+        parsed = {}
+        parsed.update({ELEMENT: fn[0]})
 
-        self.parsed = {}
-        self.parsed.update({ELEMENT: self.fn[0]})
+        if parsed[ELEMENT] in PORT_TYPES:
+            return parsed.update(self.get_port_args(parsed))
 
-        if self.fn[0] in PORT_TYPES:
-            return self.parse_port()
-
-        return self.parse_element()
-
-    def parse_port(self):
-        ret = False
-        for i in self._return_args(self.fn[1:]):
-            a, v = self._get_argval(i)
-            if a in PORT_ARGS:
-                self.parsed.update({a: v})
-                ret = True
-
-        return ret
-
-    def parse_element(self):
-        ret = False
-        for i in self._return_args(self.fn[1:]):
+        for i in self._return_args(fn[1:]):
             a, v = self._get_argval(i)
             if a in FILENAME_ARGS:
-                self.parsed.update({a: v})
-                ret = True
-            # add 'else warn about bad arg'
+                parsed.update({a: v})
+            else: 
+                warnings.warn(f"'{a}={v}' is invalid sim element argument.")
+
+        return parsed
+
+    def get_port_args(self, filename):
+        ret = {}
+        for i in self._return_args(filename):
+            a, v = self._get_argval(i)
+            if a in PORT_ARGS:
+                ret.update({a: v})
+            else: 
+                warnings.warn(f"'{a}={v}' is invalid port argument.")
+
         return ret
 
     def _return_args(self, split_name):
