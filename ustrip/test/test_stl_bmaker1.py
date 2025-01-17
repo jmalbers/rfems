@@ -49,7 +49,7 @@ class TestBasicMakerBasic(unittest.TestCase):
         self.uut.simgeo.elements[0].number = 1
 
         self.uut._draw_element(self.uut.simgeo.elements[0])
-        #self.uut.run_appcsxcad()
+        self.uut.run_appcsxcad()
 
 if __name__ == "__main__":
     unittest.main()

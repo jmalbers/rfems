@@ -9,6 +9,7 @@ class BasicMaker(CSXMaker):
     def __init__(self) -> None:
         self.simgeo = emsclass.SimGeometry()
         self.csx    = ContinuousStructure()
+        self.temp   = tempfile.TemporaryDirectory()
 
         self._aext  = StlArgsExtractor()
         self._dext  = StlDataExtractor()
@@ -59,15 +60,14 @@ class BasicMaker(CSXMaker):
         #    mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
         #    continue
 
-        with tempfile.TemporaryDirectory() as dirname:
-            tfname = f'{dirname}/{ele.name}_{ele.number}.stl'
-            f = open(tfname, 'wb')
-            ele.istl.stl_byio.seek(0)
-            f.write(ele.istl.stl_byio.read())
-            f.close()
-            prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
-            prim.ReadFile()
-            self.logger.debug(f'PolyhedronReader got BBOX: {prim.GetBoundBox()}')
+        tfname = f'{self.temp.name}/{ele.name}_{ele.number}.stl'
+        f = open(tfname, 'wb')
+        ele.istl.stl_byio.seek(0)
+        f.write(ele.istl.stl_byio.read())
+        f.close()
+        prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
+        prim.ReadFile()
+        self.logger.debug(f'PolyhedronReader got BBOX: {prim.GetBoundBox()}')
 
 
 
