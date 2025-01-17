@@ -1,4 +1,4 @@
-import tempfile
+import tempfile, logging
 from CSXCAD import ContinuousStructure
 import solverlib.classes as emsclass
 from solverlib.constants import *
@@ -9,12 +9,15 @@ class BasicMaker(CSXMaker):
     def __init__(self) -> None:
         self.simgeo = emsclass.SimGeometry()
         self.csx    = ContinuousStructure()
-        
+
         self._aext  = StlArgsExtractor()
         self._dext  = StlDataExtractor()
 
+        self.logger = logging.getLogger(self.__class__.__name__)
+
     def add_stl(self, istl: ImportedStl):
         fnargs = self._aext.get_filename_args(istl.filename)
+        self.logger.debug(f'STL filename args: {fnargs.keys()} {fnargs.values()}')
 
         dispatch = {
             USTRIP:    self._add_element,
@@ -25,6 +28,7 @@ class BasicMaker(CSXMaker):
 
     def make_csx(self):
         for e in self.simgeo.elements:
+            self.logger.debug(f'Make CSX element: {e}')
             self._draw_element(e)
 
     #def _add_rwgport(self, fdtd, filename, stl):
@@ -39,34 +43,31 @@ class BasicMaker(CSXMaker):
 
     def _add_element(self, istl: ImportedStl):
         start, stop = self._dext.get_bbox(istl.stl_data)
+        self.logger.debug(f'BBox Start: {start} BBox Stop: {stop}')
         e = emsclass.GeoEle()
         e.load_dict(self._aext.get_filename_args(istl.filename))
         e.istl = istl
         self.simgeo.elements.append(e)
 
     def _draw_element(self, ele):
-        print(ele.color)
-        mat = self.csx.AddMetal(ele.name)
+        #mat = self.csx.AddMetal(ele.name)
         #if ele.material in METALS else \
-        #      self.csx.AddMaterial(ele.material)
+        mat = self.csx.AddMaterial(ele.name)
         mat.SetColor(ele.color)
 
         #if np.any(np.isclose(ele.bbox[1] - ele.bbox[0]), 0):
         #    mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
         #    continue
-        
+
         with tempfile.TemporaryDirectory() as dirname:
-            tfname = f'{dirname}/{ele.name}_{ele.number}.stl'   
+            tfname = f'{dirname}/{ele.name}_{ele.number}.stl'
             f = open(tfname, 'wb')
             ele.istl.stl_byio.seek(0)
             f.write(ele.istl.stl_byio.read())
-            f.seek(0)
             f.close()
-            with open(tfname, 'rb') as test:
-                print(test.read())
             prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
             prim.ReadFile()
-
+            self.logger.debug(f'PolyhedronReader got BBOX: {prim.GetBoundBox()}')
 
 
 

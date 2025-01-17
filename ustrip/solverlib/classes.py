@@ -37,7 +37,7 @@ class GeoEle:
             self.kappa    = None
             self.epsilon  = None
             self.color    = None
-            
+
             self.istl = None
             self.bbox = None
 
@@ -58,7 +58,7 @@ class Port:
         self.zo        = None
         self.excite    = None
         self.color = None
-        
+
         self.bbox  = bbox
         self.geo   = None
         self.port  = None

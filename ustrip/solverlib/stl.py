@@ -24,7 +24,7 @@ class StlImporter(Importer):
 
     def import_zip(self, filename):
         self._unzip_models(filename)
-            
+
         for r, _, f in os.walk(self.tmpdir.name):
             for name in f:
                 imp = self.import_stl(os.path.join(r, name))
@@ -40,9 +40,9 @@ class StlImporter(Importer):
         with open(filename, 'rb') as f:
             if f.read(5) != b'solid':
                 raise ValueError(f"'{filename}' is unsupported STL format.")
-            
+
             imp.stl_byio = BytesIO(f.read())
-        
+
         return imp
 
     def _make_npdata(self, stl_byio: BytesIO):
@@ -57,6 +57,7 @@ class StlImporter(Importer):
                 facet = []
             if d[0] == b'vertex' and len(d) == 4:
                 facet.append([ float(x) for x in d[1:]])
+        f.seek(0)
 
         return data
 
@@ -110,7 +111,7 @@ class StlArgsExtractor:
         Parses STL filename to retrieve modeling and simulation parameters.
 
 
-        This really needs to just parse strings and return values rather than 
+        This really needs to just parse strings and return values rather than
         store stuff.
 
         """
@@ -121,7 +122,7 @@ class StlArgsExtractor:
         fn = self._split_name(filename)
         if fn[0] not in VALID_ELEMENTS:
             raise TypeError(f"'{fn}' is invalid sim element.")
-        
+
         parsed = {}
         parsed.update({ELEMENT: fn[0]})
 
@@ -132,7 +133,7 @@ class StlArgsExtractor:
             a, v = self._get_argval(i)
             if a in FILENAME_ARGS:
                 parsed.update({a: v})
-            else: 
+            else:
                 warnings.warn(f"'{a}={v}' is invalid sim element argument.")
 
         return parsed
@@ -143,7 +144,7 @@ class StlArgsExtractor:
             a, v = self._get_argval(i)
             if a in PORT_ARGS:
                 ret.update({a: v})
-            else: 
+            else:
                 warnings.warn(f"'{a}={v}' is invalid port argument.")
 
         return ret
