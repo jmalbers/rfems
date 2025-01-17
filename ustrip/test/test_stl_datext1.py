@@ -42,6 +42,6 @@ class TestStlDataParserBasic(unittest.TestCase):
         x, y = self.uut.get_rwgport_dim(DIRECTIONS['y'], RWG_BBOX_START, RWG_BBOX_STOP)
         self.assertEqual(x, RWG_WIDTH)
         self.assertEqual(y, RWG_HEIGHT)
-        
+
 if __name__ == "__main__":
     unittest.main()

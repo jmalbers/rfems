@@ -9,6 +9,7 @@ from solverlib.constants import *
 
 FILE_PATH = 'test_files/'
 STL_FILE  = 'ustrip n=1 pri=3 mat=copper.stl'
+STL_FILE2 = 'substrate.stl'
 
 class TestBasicMakerBasic(unittest.TestCase):
 
@@ -19,7 +20,7 @@ class TestBasicMakerBasic(unittest.TestCase):
 
         cls.istl = cls.imp.import_stl(FILE_PATH + STL_FILE)
         cls.istl.stl_data = cls.imp._make_npdata(cls.istl.stl_byio)
-        
+
     def setUp(self):
         self.uut = BasicMaker()
 
@@ -34,13 +35,21 @@ class TestBasicMakerBasic(unittest.TestCase):
         self.uut._add_element(self.istl)
         self.uut.simgeo.elements[0].color = COLORS[RED]
         self.uut._draw_element(self.uut.simgeo.elements[0])
-    
-    @unittest.skip
+
+    #@unittest.skip
     def test_runapp_csxcad(self):
-        self.uut._add_element(self.istl)
+        import logging
+        logging.basicConfig(level=logging.DEBUG)
+        istl = self.imp.import_stl(FILE_PATH + STL_FILE2)
+        istl.stl_data = self.imp._make_npdata(istl.stl_byio)
+
+        self.uut._add_element(istl)
         self.uut.simgeo.elements[0].color = COLORS[RED]
+        self.uut.simgeo.elements[0].priority = 1
+        self.uut.simgeo.elements[0].number = 1
+
         self.uut._draw_element(self.uut.simgeo.elements[0])
-        self.uut.run_appcsxcad()
+        #self.uut.run_appcsxcad()
 
 if __name__ == "__main__":
     unittest.main()

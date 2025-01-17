@@ -36,6 +36,6 @@ class TestStlImporterBasic(unittest.TestCase):
         self.uut.import_zip(FILE_PATH+ZIP_FILE)
         for i in self.uut.imports:
             self.assertTrue(i.filename in ZIP_CONTENTS)
-            
+
 if __name__ == "__main__":
     unittest.main()
