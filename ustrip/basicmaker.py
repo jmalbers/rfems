@@ -1,4 +1,5 @@
 import tempfile, logging
+import numpy as np
 from CSXCAD import ContinuousStructure
 import solverlib.classes as emsclass
 from solverlib.constants import *
@@ -29,7 +30,7 @@ class BasicMaker(CSXMaker):
 
     def make_csx(self):
         for e in self.simgeo.elements:
-            self.logger.debug(f'Make CSX element: {e}')
+            self.logger.info(f'Make CSX element: {e}')
             self._draw_element(e)
 
     #def _add_rwgport(self, fdtd, filename, stl):
@@ -43,21 +44,17 @@ class BasicMaker(CSXMaker):
     #    self.simgeo.ports.append(p)
 
     def _add_element(self, istl: ImportedStl):
-        start, stop = self._dext.get_bbox(istl.stl_data)
-        self.logger.debug(f'BBox Start: {start} BBox Stop: {stop}')
         e = emsclass.GeoEle()
-        e.load_dict(self._aext.get_filename_args(istl.filename))
         e.istl = istl
+        e.load_dict(self._aext.get_filename_args(istl.filename))
+        start, stop = self._dext.get_bbox(istl.stl_data)
+        self.logger.info(f'\n* Data extractor output for "{e.name}" element *'
+                         f'\n Predicted bbox:\n {"-"*15}'
+                         f'\n {start}\n {stop}')
         self.simgeo.elements.append(e)
 
     # Writing imported substrate.stl to xml file from CSX fails open in GUI
     # due to invalid structure error (?)
-    #
-    # Original project meshes (partially?) geometry after import. Try adding
-    # meshlines along substrate bbox to see if that fixes.
-    #
-    # If it turns out some sort of full meshing has to be done to create a valid
-    # CSX model then mesher class obj can be pulled inside basicmaker
     #
     # The substrate stl seems to read ok now but the ustrip one is bad. 
     # Refactor tests to just use substrate test for now and debug ustrip later
@@ -79,7 +76,9 @@ class BasicMaker(CSXMaker):
             prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
             prim.ReadFile()
 
-        self.logger.debug(f'PolyhedronReader got BBOX: {prim.GetBoundBox()}')
+        self.logger.info(f'\n* PolyhedronReader output for "{ele.name}" element *'
+                         f'\n Vertices: {prim.GetNumVertices()}\n Faces: {prim.GetNumFaces()}'
+                         f'\n Actual bbox:\n {"-"*10}\n {np.array_str(prim.GetBoundBox(), precision=3, suppress_small=True)}')
 
 
 
