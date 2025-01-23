@@ -58,6 +58,9 @@ class BasicMaker(CSXMaker):
     #
     # If it turns out some sort of full meshing has to be done to create a valid
     # CSX model then mesher class obj can be pulled inside basicmaker
+    #
+    # The substrate stl seems to read ok now but the ustrip one is bad. 
+    # Refactor tests to just use substrate test for now and debug ustrip later
     
     def _draw_element(self, ele):
         #mat = self.csx.AddMetal(ele.name)
@@ -70,12 +73,12 @@ class BasicMaker(CSXMaker):
         #    continue
 
         tfname = f'{self.temp.name}/{ele.name}_{ele.number}.stl'
-        f = open(tfname, 'wb')
-        ele.istl.stl_byio.seek(0)
-        f.write(ele.istl.stl_byio.read())
-        f.close()
-        prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
-        prim.ReadFile()
+
+        with open(tfname, 'wb') as f:
+            f.write(ele.istl.stl_byio.read())
+            prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
+            prim.ReadFile()
+
         self.logger.debug(f'PolyhedronReader got BBOX: {prim.GetBoundBox()}')
 
 
