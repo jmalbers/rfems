@@ -50,6 +50,15 @@ class BasicMaker(CSXMaker):
         e.istl = istl
         self.simgeo.elements.append(e)
 
+    # Writing imported substrate.stl to xml file from CSX fails open in GUI
+    # due to invalid structure error (?)
+    #
+    # Original project meshes (partially?) geometry after import. Try adding
+    # meshlines along substrate bbox to see if that fixes.
+    #
+    # If it turns out some sort of full meshing has to be done to create a valid
+    # CSX model then mesher class obj can be pulled inside basicmaker
+    
     def _draw_element(self, ele):
         #mat = self.csx.AddMetal(ele.name)
         #if ele.material in METALS else \
@@ -68,6 +77,7 @@ class BasicMaker(CSXMaker):
         prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
         prim.ReadFile()
         self.logger.debug(f'PolyhedronReader got BBOX: {prim.GetBoundBox()}')
+
 
 
 
