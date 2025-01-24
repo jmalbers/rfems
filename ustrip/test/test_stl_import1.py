@@ -30,7 +30,7 @@ class TestStlImporterBasic(unittest.TestCase):
 
     def test_open_zip(self):
         self.uut._unzip_models(FILE_PATH + ZIP_FILE)
-        self.uut.tmpdir.cleanup()
+        self.uut.temp.cleanup()
 
     def test_import_zip(self):
         self.uut.import_zip(FILE_PATH+ZIP_FILE)

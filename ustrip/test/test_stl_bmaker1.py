@@ -21,8 +21,15 @@ class TestBasicMakerBasic(unittest.TestCase):
         cls.istl = cls.imp.import_stl(FILE_PATH + STL_FILE)
         cls.istl.stl_data = cls.imp._make_npdata(cls.istl.stl_byio)
 
+    @classmethod
+    def tearDownClass(cls):
+        ...
+
     def setUp(self):
         self.uut = BasicMaker()
+
+    def tearDown(self):
+        self.uut.temp.cleanup()
 
     def test_add_element(self):
         self.uut._add_element(self.istl)
@@ -31,17 +38,13 @@ class TestBasicMakerBasic(unittest.TestCase):
         self.assertEqual(self.uut.simgeo.elements[0].material, 'copper')
         self.assertEqual(self.uut.simgeo.elements[0].priority, '3')
 
-    @unittest.skip
     def test_draw_element(self):
         self.uut._add_element(self.istl)
         self.uut.simgeo.elements[0].color = COLORS[RED]
         self.uut._draw_element(self.uut.simgeo.elements[0])
+        self.uut.temp.cleanup()
 
-    #@unittest.skip
     def test_runapp_csxcad(self):
-        import logging
-        logging.basicConfig(level=logging.INFO)
-        
         istl = self.imp.import_stl(FILE_PATH + STL_FILE2)
         istl.stl_data = self.imp._make_npdata(istl.stl_byio)
 
@@ -51,7 +54,7 @@ class TestBasicMakerBasic(unittest.TestCase):
         self.uut.simgeo.elements[0].number = 1
 
         self.uut._draw_element(self.uut.simgeo.elements[0])
-        #self.uut.run_appcsxcad()
+        self.uut.run_appcsxcad()
         self.uut.temp.cleanup()
 
 if __name__ == "__main__":

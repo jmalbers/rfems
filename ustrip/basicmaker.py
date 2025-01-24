@@ -79,10 +79,11 @@ class BasicMaker(CSXMaker):
         #    continue
 
         tfname = f'{self.temp.name}/{ele.name}_{ele.number}.stl'
-
+        self.logger.info(f'\n Stashing in "{tfname}" for PolyhedronReader')
         with open(tfname, 'wb') as f:
             f.write(ele.istl.stl_byio.read())
             prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
+            f.seek(0)
             prim.ReadFile()
 
         self.logger.debug(f'\n PolyhedronReader output for "{ele.name}" element '

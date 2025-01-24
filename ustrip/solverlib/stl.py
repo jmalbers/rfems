@@ -22,20 +22,20 @@ class StlImporter(Importer):
         """
     def __init__(self) -> None:
         self.imports = []
-        self.tmpdir  : tempfile.TemporaryDirectory
-        self.logger = logging.getLogger(__class__.__name__)
+        self.temp    : tempfile.TemporaryDirectory
+        self.logger  = logging.getLogger(__class__.__name__)
 
     def import_zip(self, filename):
         self.logger.info(f"* Importing ZIP file '{filename}'")
         self._unzip_models(filename)
 
-        for r, _, f in os.walk(self.tmpdir.name):
+        for r, _, f in os.walk(self.temp.name):
             for name in f:
                 imp = self.import_stl(os.path.join(r, name))
                 imp.stl_data = self._make_npdata(imp.stl_byio)
                 self.imports.append(imp)
 
-        self.tmpdir.cleanup()
+        self.temp.cleanup()
 
     def import_stl(self, filename):
         self.logger.info(f'\n* Importing STL file "{filename}" *')
@@ -75,14 +75,14 @@ class StlImporter(Importer):
 
     def _unzip_models(self, filename):
         zip = zipfile.ZipFile(filename)
-        self.tmpdir = tempfile.TemporaryDirectory()
+        self.temp = tempfile.TemporaryDirectory()
 
         for info in zip.infolist():
             if info.is_dir():
                 continue
             root, ext = os.path.splitext(info.filename)
             if ext == '.stl':
-                zip.extract(info, path=str(self.tmpdir.name))
+                zip.extract(info, path=str(self.temp.name))
 
     def _fix_header(self, stl_byio):
         stl_byio.seek(0)
