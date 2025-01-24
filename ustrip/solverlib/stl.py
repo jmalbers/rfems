@@ -4,6 +4,9 @@ from io import BytesIO
 from solverlib.classes import Importer
 from solverlib.constants import *
 
+STL_HEADER_SIZE = 80
+STL_EOL = '\r\n'
+
 class ImportedStl:
     def __init__(self):
         self.filename = ''
@@ -23,6 +26,7 @@ class StlImporter(Importer):
         self.logger = logging.getLogger(__class__.__name__)
 
     def import_zip(self, filename):
+        self.logger.info(f"* Importing ZIP file '{filename}'")
         self._unzip_models(filename)
 
         for r, _, f in os.walk(self.tmpdir.name):
@@ -34,16 +38,20 @@ class StlImporter(Importer):
         self.tmpdir.cleanup()
 
     def import_stl(self, filename):
+        self.logger.info(f'\n* Importing STL file "{filename}" *')
         imp = ImportedStl()
         imp.filename = os.path.splitext(os.path.split(filename)[1])[0]
 
         with open(filename, 'rb') as f:
             if f.read(5) != b'solid':
                 raise ValueError(f"'{filename}' is unsupported STL format.")
-
             f.seek(0)
             imp.stl_byio = BytesIO(f.read())
 
+        if len(imp.stl_byio.readline()) != 80: 
+            self._fix_header(imp.stl_byio)
+
+        imp.stl_byio.seek(0)
         return imp
 
     def _make_npdata(self, stl_byio: BytesIO):
@@ -53,7 +61,7 @@ class StlImporter(Importer):
 
         f = stl_byio
         for ln in f:
-            self.logger.debug(f'Making numpy data from: {ln}')
+            self.logger.debug(f' Making numpy data from: {ln}')
             d = ln.split()
 
             if d[0] == b'endfacet' and facet:
@@ -76,6 +84,23 @@ class StlImporter(Importer):
             if ext == '.stl':
                 zip.extract(info, path=str(self.tmpdir.name))
 
+    def _fix_header(self, stl_byio):
+        stl_byio.seek(0)
+        stl = stl_byio.readlines()
+        ln = stl[0].decode()
+        self.logger.info(f'\n* Repairing STL header line length: {len(ln)} *')
+        self.logger.debug(f'\n STL header value: {ln}')
+        eol = ln.find(STL_EOL)
+        pad = STL_HEADER_SIZE - len(ln)
+        fixln = f'{ln[:eol]}{" " * pad}{STL_EOL}'.encode()
+        self.logger.debug(f' \nNew STL header line length: {len(fixln)}'
+                          f' \nNew STL header value: {fixln}')
+        stl_byio.seek(0)
+        stl_byio.write(fixln)
+        for idx in range(1, len(stl)-1):
+            stl_byio.write(stl[idx])
+        stl_byio.seek(0)
+                         
 class StlDataExtractor:
     """ STL Data Parser
 

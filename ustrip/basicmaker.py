@@ -18,8 +18,9 @@ class BasicMaker(CSXMaker):
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def add_stl(self, istl: ImportedStl):
+        self.logger.info(f"\n* Adding STL model {istl.filename} *")
         fnargs = self._aext.get_filename_args(istl.filename)
-        self.logger.debug(f'STL filename args: {fnargs.keys()} {fnargs.values()}')
+        self.logger.debug(f' STL filename args: {fnargs.keys()} {fnargs.values()}')
 
         dispatch = {
             USTRIP:    self._add_element,
@@ -30,7 +31,6 @@ class BasicMaker(CSXMaker):
 
     def make_csx(self):
         for e in self.simgeo.elements:
-            self.logger.info(f'Make CSX element: {e}')
             self._draw_element(e)
 
     #def _add_rwgport(self, fdtd, filename, stl):
@@ -44,11 +44,12 @@ class BasicMaker(CSXMaker):
     #    self.simgeo.ports.append(p)
 
     def _add_element(self, istl: ImportedStl):
+        self.logger.info(f'\n* Adding "{istl.filename}" to geometry *')
         e = emsclass.GeoEle()
         e.istl = istl
         e.load_dict(self._aext.get_filename_args(istl.filename))
         start, stop = self._dext.get_bbox(istl.stl_data)
-        self.logger.debug(f'\n* Data extractor output for "{e.name}" element *'
+        self.logger.debug(f'\n Data extractor output for "{e.name}" element '
                           f'\n Predicted bbox:\n {"-"*15}'
                           f'\n {start}\n {stop}')
         self.simgeo.elements.append(e)
@@ -62,10 +63,12 @@ class BasicMaker(CSXMaker):
     # STL files have 80byte fixed header size. Premature EOF error in vtk comes
     # from header size being shorter than 80 bytes. Not sure if this is a Fusion 
     # export issue or an issue with stl -> bytes io -> stl conversions. 
-    # - Maybe find something that reads header size? 
-    # - Check header size on import? 
+    # - Pad header to required lengt *** this didn't seem to work? ***
+    # - Same error if pad header to 200 len
+    #
     
     def _draw_element(self, ele):
+        self.logger.info(f'\n* Drawing {ele.name} element in CSXCAD *')
         #mat = self.csx.AddMetal(ele.name)
         #if ele.material in METALS else \
         mat = self.csx.AddMaterial(ele.name)
@@ -82,7 +85,7 @@ class BasicMaker(CSXMaker):
             prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
             prim.ReadFile()
 
-        self.logger.debug(f'\n* PolyhedronReader output for "{ele.name}" element *'
+        self.logger.debug(f'\n PolyhedronReader output for "{ele.name}" element '
                           f'\n Vertices: {prim.GetNumVertices()}\n Faces: {prim.GetNumFaces()}'
                           f'\n Actual bbox:\n {"-"*10}\n {np.array_str(prim.GetBoundBox(), precision=3, suppress_small=True)}')
 
