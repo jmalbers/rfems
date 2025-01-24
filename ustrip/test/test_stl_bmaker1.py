@@ -40,7 +40,7 @@ class TestBasicMakerBasic(unittest.TestCase):
     #@unittest.skip
     def test_runapp_csxcad(self):
         import logging
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level=logging.DEBUG)
         istl = self.imp.import_stl(FILE_PATH + STL_FILE2)
         istl.stl_data = self.imp._make_npdata(istl.stl_byio)
 

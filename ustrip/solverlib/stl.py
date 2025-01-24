@@ -1,7 +1,6 @@
 import numpy as np
-import zipfile, tempfile, os
+import zipfile, tempfile, os, logging, warnings
 from io import BytesIO
-import warnings
 from solverlib.classes import Importer
 from solverlib.constants import *
 
@@ -21,6 +20,7 @@ class StlImporter(Importer):
     def __init__(self) -> None:
         self.imports = []
         self.tmpdir  : tempfile.TemporaryDirectory
+        self.logger = logging.getLogger(__class__.__name__)
 
     def import_zip(self, filename):
         self._unzip_models(filename)
@@ -41,17 +41,21 @@ class StlImporter(Importer):
             if f.read(5) != b'solid':
                 raise ValueError(f"'{filename}' is unsupported STL format.")
 
+            f.seek(0)
             imp.stl_byio = BytesIO(f.read())
 
         return imp
 
     def _make_npdata(self, stl_byio: BytesIO):
+        self.logger.info('\n* Making numpy data from STL import *')
         data  = []
         facet = []
 
         f = stl_byio
         for ln in f:
+            self.logger.debug(f'Making numpy data from: {ln}')
             d = ln.split()
+
             if d[0] == b'endfacet' and facet:
                 data.append(np.array(facet))
                 facet = []

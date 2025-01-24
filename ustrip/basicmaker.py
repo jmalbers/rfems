@@ -48,9 +48,9 @@ class BasicMaker(CSXMaker):
         e.istl = istl
         e.load_dict(self._aext.get_filename_args(istl.filename))
         start, stop = self._dext.get_bbox(istl.stl_data)
-        self.logger.info(f'\n* Data extractor output for "{e.name}" element *'
-                         f'\n Predicted bbox:\n {"-"*15}'
-                         f'\n {start}\n {stop}')
+        self.logger.debug(f'\n* Data extractor output for "{e.name}" element *'
+                          f'\n Predicted bbox:\n {"-"*15}'
+                          f'\n {start}\n {stop}')
         self.simgeo.elements.append(e)
 
     # Writing imported substrate.stl to xml file from CSX fails open in GUI
@@ -58,6 +58,12 @@ class BasicMaker(CSXMaker):
     #
     # The substrate stl seems to read ok now but the ustrip one is bad. 
     # Refactor tests to just use substrate test for now and debug ustrip later
+    #
+    # STL files have 80byte fixed header size. Premature EOF error in vtk comes
+    # from header size being shorter than 80 bytes. Not sure if this is a Fusion 
+    # export issue or an issue with stl -> bytes io -> stl conversions. 
+    # - Maybe find something that reads header size? 
+    # - Check header size on import? 
     
     def _draw_element(self, ele):
         #mat = self.csx.AddMetal(ele.name)
@@ -76,9 +82,9 @@ class BasicMaker(CSXMaker):
             prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
             prim.ReadFile()
 
-        self.logger.info(f'\n* PolyhedronReader output for "{ele.name}" element *'
-                         f'\n Vertices: {prim.GetNumVertices()}\n Faces: {prim.GetNumFaces()}'
-                         f'\n Actual bbox:\n {"-"*10}\n {np.array_str(prim.GetBoundBox(), precision=3, suppress_small=True)}')
+        self.logger.debug(f'\n* PolyhedronReader output for "{ele.name}" element *'
+                          f'\n Vertices: {prim.GetNumVertices()}\n Faces: {prim.GetNumFaces()}'
+                          f'\n Actual bbox:\n {"-"*10}\n {np.array_str(prim.GetBoundBox(), precision=3, suppress_small=True)}')
 
 
 
