@@ -49,7 +49,7 @@ class TestBasicMakerBasic(unittest.TestCase):
         istl.stl_data = self.imp._make_npdata(istl.stl_byio)
 
         self.uut._add_element(istl)
-        self.uut.simgeo.elements[0].color = COLORS[RED]
+        self.uut.simgeo.elements[0].color = COLORS[SUBSTRATE]
         self.uut.simgeo.elements[0].priority = 1
         self.uut.simgeo.elements[0].number = 1
 

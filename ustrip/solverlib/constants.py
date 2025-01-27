@@ -96,17 +96,33 @@ KAPPAS = {  # s/m
 # Colors
 # ------------------------------------------------------------------------------
 
-RED = 'red'
+RED    = 'red'
+BLUE   = 'blue'
+GREEN  = 'green'
+YELLOW = 'yellow'
+ORANGE = 'orange'
+WHITE  = 'white'
+BLACK  = 'black'
+GREY   = 'grey'
 
 COLORS = {
-    PEC:      "#dbc7b8",
-    SILVER:   "#c0c0c0",
-    COPPER:   "#e6be8a",
-    GOLD:     "#ffd700",
-    ALUMINUM: "#d0d5d9",
-    BRASS:    "#ac9f3c",
-    STEEL:    "#888b8d",
-    RED  :    "#ff0000"
+    PEC:       "#dbc7b8",
+    SILVER:    "#c0c0c0",
+    COPPER:    "#e6be8a",
+    GOLD:      "#ffd700",
+    ALUMINUM:  "#d0d5d9",
+    BRASS:     "#ac9f3c",
+    STEEL:     "#888b8d",
+    USTRIP:    "#b87333",
+    SUBSTRATE: "#efdfbb",
+    RWG_PORT:  "#56a0d3",
+    RED:       "#ff0000",
+    BLUE:      "#00bfff",
+    GREEN:     "#4d5d53",
+    YELLOW:    "#ffe135",
+    WHITE:     "#ffffff",
+    BLACK:     "#000000",
+    GREY:      "#8A8A8A"
 }
 
 # ------------------------------------------------------------------------------
