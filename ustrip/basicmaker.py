@@ -49,6 +49,7 @@ class BasicMaker(CSXMaker):
         e.istl = istl
         e.load_dict(self._aext.get_filename_args(istl.filename))
         start, stop = self._dext.get_bbox(istl.stl_data)
+        e.bbox = [start, stop]
         self.logger.debug(f'\n Data extractor output for "{e.name}" element '
                           f'\n Predicted bbox:\n {"-"*15}'
                           f'\n {start}\n {stop}')
@@ -69,14 +70,17 @@ class BasicMaker(CSXMaker):
     
     def _draw_element(self, ele):
         self.logger.info(f'\n* Drawing {ele.name} element in CSXCAD *')
-        #mat = self.csx.AddMetal(ele.name)
-        #if ele.material in METALS else \
-        mat = self.csx.AddMaterial(ele.name)
-        mat.SetColor(ele.color)
+        
+        if ele.material in METALS:
+            mat = self.csx.AddMetal(ele.name)
+        else: 
+            mat = self.csx.AddMaterial(ele.name)
+        
+        mat.SetColor(COLORS[ele.name])
 
-        #if np.any(np.isclose(ele.bbox[1] - ele.bbox[0]), 0):
-        #    mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
-        #    continue
+        if np.any(np.isclose(ele.bbox[1] - ele.bbox[0], 0)):
+            mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
+            self.logger.info(f'\n Drew box geometry for element "{ele.name}"')
 
         tfname = f'{self.temp.name}/{ele.name}_{ele.number}.stl'
         self.logger.info(f'\n Stashing in "{tfname}" for PolyhedronReader')

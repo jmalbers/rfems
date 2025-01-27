@@ -1,5 +1,4 @@
-import sys
-import unittest
+import sys, unittest, logging
 
 sys.path.append("../")
 from basicmaker import BasicMaker
@@ -48,6 +47,7 @@ class TestBasicMakerBasic(unittest.TestCase):
         istl = self.imp.import_stl(FILE_PATH + STL_FILE2)
         istl.stl_data = self.imp._make_npdata(istl.stl_byio)
 
+        self.uut.logger.setLevel(logging.DEBUG)
         self.uut._add_element(istl)
         self.uut.simgeo.elements[0].color = COLORS[SUBSTRATE]
         self.uut.simgeo.elements[0].priority = 1
