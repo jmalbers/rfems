@@ -10,6 +10,8 @@ FILE_PATH = 'test_files/'
 STL_FILE  = 'ustrip n=1 pri=3 mat=copper.stl'
 STL_FILE2 = 'substrate.stl'
 
+# Needs test for add_stl function
+
 class TestBasicMakerBasic(unittest.TestCase):
 
     @classmethod
@@ -39,6 +41,7 @@ class TestBasicMakerBasic(unittest.TestCase):
 
     def test_draw_element(self):
         self.uut._add_element(self.istl)
+        self.assertTrue(len(self.uut.simgeo.elements) == 1)
         self.uut.simgeo.elements[0].color = COLORS[RED]
         self.uut._draw_element(self.uut.simgeo.elements[0])
         self.uut.temp.cleanup()
@@ -47,7 +50,7 @@ class TestBasicMakerBasic(unittest.TestCase):
         istl = self.imp.import_stl(FILE_PATH + STL_FILE2)
         istl.stl_data = self.imp._make_npdata(istl.stl_byio)
 
-        self.uut.logger.setLevel(logging.DEBUG)
+        #logging.basicConfig(level=logging.DEBUG)
         self.uut._add_element(istl)
         self.uut.simgeo.elements[0].color = COLORS[SUBSTRATE]
         self.uut.simgeo.elements[0].priority = 1

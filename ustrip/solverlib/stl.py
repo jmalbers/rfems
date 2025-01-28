@@ -149,7 +149,7 @@ class StlArgsExtractor:
 
     def get_filename_args(self, filename):
         fn = self._split_name(filename)
-        if fn[0] not in VALID_ELEMENTS:
+        if fn[0] not in ELEMENTS:
             raise TypeError(f"'{fn}' is invalid sim element.")
 
         parsed = {}

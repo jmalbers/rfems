@@ -2,9 +2,14 @@
 # EMSolver Constants
 # ---------------------------------------
 
-# ---------------------------------------
-# Boundary Conditions
-# ---------------------------------------
+DEFAULT_PITCH     = 1e-3
+DEFAULT_POINTS    = 1000  # even to ensure group delay calculation
+DEFAULT_REFERENCE = 50
+DEFAULT_PRIORITY  = 0
+DEFAULT_DPHI      = 2
+DEFAULT_DTHETA    = 2
+
+    # Boundary Conditions
 
 PEC   = 'pec'
 MUR   = 'mur'
@@ -14,65 +19,44 @@ BOUNDARY_CONDITIONS = [PEC, MUR, PMC, PML_8]
 USTRIP_BOUNDARY = PEC * 6
 
 # ------------------------------------------------------------------------------
-# Simulation Arguments: Command Line & Other
+# 3D Model Constants
 # ------------------------------------------------------------------------------
 
-END_CRITERIA  = 'EndCriteria'
-NUM_TIMESTEPS = 'NrTS'
-PRIORITY      = 'pri'
-Z0            = 'zo'
-KAPPA         = 'kappa'
-EPSILON       = 'epsilon'
-NUMBER        = 'n'
-DIRECTION     = 'd'
-EXCITE        = 'excite'
-MATERIAL      = 'mat'
-TE10          = 'te10'
-COLOR         = 'color'
-FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON, NUMBER, DIRECTION, MATERIAL,
-                 EXCITE, COLOR]
-PORT_ARGS     = [Z0, NUMBER, DIRECTION, EXCITE]
-ARG_SEPERATOR = '='
-
-# ------------------------------------------------------------------------------
-# 3D Model Elements: For labeling simulation geometry
-# ------------------------------------------------------------------------------
-
-ELEMENT   = 'element'
-PORT      = 'port'
-RWG_PORT  = 'rwgport'
-LUM_PORT  = 'lumport'
-USTRIP    = 'ustrip'
-SUBSTRATE = 'substrate'
-DUMP_BOX  = 'dumpbox'
-ENCLOSURE = 'enclosure'
-PART      = 'part'
-WIRE      = 'wire'
-VALID_ELEMENTS = [USTRIP, SUBSTRATE, PORT, RWG_PORT, LUM_PORT,
-                  DUMP_BOX, ENCLOSURE, PART, WIRE]
-PORT_TYPES     = [RWG_PORT, LUM_PORT]
-SIM_HELPER     = [DUMP_BOX]
-
-# ------------------------------------------------------------------------------
 # STL Constants
-# ------------------------------------------------------------------------------
 
 STL_TOL = .001  # mm
 STL_UNIT = 1e-3
 
-# ------------------------------------------------------------------------------
-# SIM Constants
-# ------------------------------------------------------------------------------
+# Geometry ID Constants
+     
+     # Ports
+PORT      = 'port'
+RWG_PORT  = 'rwgport'
+LUM_PORT  = 'lumport'
+MSL_PORT  = 'mslport'
 
-DEFAULT_PITCH     = 1e-3
-DEFAULT_POINTS    = 1000  # even to ensure group delay calculation
-DEFAULT_REFERENCE = 50
-DEFAULT_PRIORITY  = 0
-DEFAULT_DPHI      = 2
-DEFAULT_DTHETA    = 2
+    # Boxes
+DUMP_BOX  = 'dumpbox'
+MESH_BOX  = 'meshbox'
+
+    # Misc.
+ELEMENT   = 'element'
+USTRIP    = 'ustrip'
+SUBSTRATE = 'substrate'
+ENCLOSURE = 'enclosure'
+PART      = 'part'
+WIRE      = 'wire'
+
+    # Classifications
+ELEMENTS = [USTRIP, SUBSTRATE, PORT, RWG_PORT, LUM_PORT,
+            DUMP_BOX, ENCLOSURE, PART, WIRE]
+PORTS    = [RWG_PORT, LUM_PORT, MSL_PORT]
+BOXES    = [DUMP_BOX, MESH_BOX]
+
+
 
 # ------------------------------------------------------------------------------
-# METALS
+# Metal Constants
 # ------------------------------------------------------------------------------
 
 SILVER   = 'silver'
@@ -93,7 +77,7 @@ KAPPAS = {  # s/m
 }
 
 # ------------------------------------------------------------------------------
-# Colors
+# Color Constants
 # ------------------------------------------------------------------------------
 
 RED    = 'red'
@@ -104,6 +88,8 @@ ORANGE = 'orange'
 WHITE  = 'white'
 BLACK  = 'black'
 GREY   = 'grey'
+
+    # Material & Structure Color Definition
 
 COLORS = {
     PEC:       "#dbc7b8",
@@ -126,7 +112,7 @@ COLORS = {
 }
 
 # ------------------------------------------------------------------------------
-# Directions
+# Directions Constants
 # ------------------------------------------------------------------------------
 
 X   = 'x'
@@ -141,4 +127,38 @@ DIRECTIONS = {
     X: '0',
     Y: '1',
     Z: '2',
+}
+
+# ------------------------------------------------------------------------------
+# Simulation Argument Constants
+# ------------------------------------------------------------------------------
+
+ARG_SEPERATOR = '='
+END_CRITERIA  = 'EndCriteria'
+NUM_TIMESTEPS = 'NrTS'
+PRIORITY      = 'pri'
+Z0            = 'zo'
+KAPPA         = 'kappa'
+EPSILON       = 'epsilon'
+NUMBER        = 'n'
+DIRECTION     = 'd'
+EXCITE        = 'excite'
+MATERIAL      = 'mat'
+TE10          = 'te10'
+COLOR         = 'color'
+
+    # Argument Classifications
+
+FILENAME_ARGS = [PRIORITY, Z0, KAPPA, EPSILON, NUMBER, DIRECTION, MATERIAL,
+                 EXCITE, COLOR]
+PORT_ARGS     = [Z0, NUMBER, DIRECTION, EXCITE]
+
+    # Default Material Priorities Definition
+
+PRIORITIES = {
+    RWG_PORT: '',
+    MSL_PORT: '',
+    LUM_PORT: '',
+    SUBSTRATE: '',
+    USTRIP: '',
 }

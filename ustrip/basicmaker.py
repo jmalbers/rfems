@@ -45,28 +45,16 @@ class BasicMaker(CSXMaker):
 
     def _add_element(self, istl: ImportedStl):
         self.logger.info(f'\n* Adding "{istl.filename}" to geometry *')
+
         e = emsclass.GeoEle()
         e.istl = istl
         e.load_dict(self._aext.get_filename_args(istl.filename))
         start, stop = self._dext.get_bbox(istl.stl_data)
         e.bbox = [start, stop]
+        self.simgeo.elements.append(e)
         self.logger.debug(f'\n Data extractor output for "{e.name}" element '
                           f'\n Predicted bbox:\n {"-"*15}'
                           f'\n {start}\n {stop}')
-        self.simgeo.elements.append(e)
-
-    # Writing imported substrate.stl to xml file from CSX fails open in GUI
-    # due to invalid structure error (?)
-    #
-    # The substrate stl seems to read ok now but the ustrip one is bad. 
-    # Refactor tests to just use substrate test for now and debug ustrip later
-    #
-    # STL files have 80byte fixed header size. Premature EOF error in vtk comes
-    # from header size being shorter than 80 bytes. Not sure if this is a Fusion 
-    # export issue or an issue with stl -> bytes io -> stl conversions. 
-    # - Pad header to required lengt *** this didn't seem to work? ***
-    # - Same error if pad header to 200 len
-    #
     
     def _draw_element(self, ele):
         self.logger.info(f'\n* Drawing {ele.name} element in CSXCAD *')
@@ -77,13 +65,24 @@ class BasicMaker(CSXMaker):
             mat = self.csx.AddMaterial(ele.name)
         
         mat.SetColor(COLORS[ele.name])
+        
+        # ---------------------------------------------------------------------------- 
 
-        if np.any(np.isclose(ele.bbox[1] - ele.bbox[0], 0)):
-            mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
-            self.logger.info(f'\n Drew box geometry for element "{ele.name}"')
+        # This logic ported over from original project is suspicious:
+        # - This appears to trigger if an object is close enough to 2D
+        # - What it doesn't consider is that the bbox only encloses the geometry
+        # - I believe a 2D ustrip with 1/4 wave stub would just get turned into a box?
+        # - Probably just remove it.
+
+        #if np.any(np.isclose(ele.bbox[1] - ele.bbox[0], 0)):
+        #    mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
+        #    self.logger.info(f'\n Drew box geometry for element "{ele.name}"')
+        
+        # ---------------------------------------------------------------------------- 
 
         tfname = f'{self.temp.name}/{ele.name}_{ele.number}.stl'
-        self.logger.info(f'\n Stashing in "{tfname}" for PolyhedronReader')
+        self.logger.debug(f'\n Stashing in "{tfname}" for PolyhedronReader')
+
         with open(tfname, 'wb') as f:
             f.write(ele.istl.stl_byio.read())
             prim = mat.AddPolyhedronReader(tfname, priority=int(ele.priority))
