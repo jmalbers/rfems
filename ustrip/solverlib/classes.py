@@ -22,11 +22,10 @@ class Mesher:
 
 class SimGeometry:
     def __init__(self):
-        self.elements = []
-        self.ports    = []
-        self.simbox   = []
-        self.mshbox   = []
-        self.dmpbox   = []
+        self.elements   = []
+        self.ports      = []
+        self.mesh_boxes = []
+        self.dump_box   = []
 
 class GeoEle:
     def __init__(self) -> None:

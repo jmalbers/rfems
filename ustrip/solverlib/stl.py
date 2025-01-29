@@ -147,7 +147,7 @@ class StlArgsExtractor:
     def __init__(self) -> None:
         ...
 
-    def get_filename_args(self, filename):
+    def get_args(self, filename):
         fn = self._split_name(filename)
 
         if fn[0] not in ELEMENTS:

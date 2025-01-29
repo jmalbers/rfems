@@ -44,22 +44,22 @@ class TestStlNameParserBasic(unittest.TestCase):
 
     def test_parse_badname(self):
         with self.assertRaises(TypeError):
-            r = self.uut.get_filename_args(' '.join(BAD_NAME))
+            r = self.uut.get_args(' '.join(BAD_NAME))
     
     def test_parse_goodname(self):
-        r = self.uut.get_filename_args(' '.join(GOOD_NAME))
+        r = self.uut.get_args(' '.join(GOOD_NAME))
         for k in GOOD_KEYS:
             self.assertTrue(k in r.keys())
         for v in GOOD_VALS:
             self.assertTrue(v in r.values())
 
     def test_bad_args(self):
-        r = self.uut.get_filename_args(' '.join(BAD_ARGS))
+        r = self.uut.get_args(' '.join(BAD_ARGS))
         self.assertFalse('beef' in r.keys())
         self.assertTrue('n' in r.keys())
 
     def test_port_args(self):
-        r = self.uut.get_filename_args(' '.join(GOOD_PORT))
+        r = self.uut.get_args(' '.join(GOOD_PORT))
         for k in GOOD_PORT_KEYS:
             self.assertTrue(k in r.keys())
         for v in GOOD_PORT_VALUES:

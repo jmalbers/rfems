@@ -8,9 +8,9 @@ from solverlib.stl       import StlArgsExtractor, StlDataExtractor, ImportedStl
 
 class BasicMaker(CSXMaker):
     def __init__(self) -> None:
-        self.simgeo = emsclass.SimGeometry()
-        self.csx    = ContinuousStructure()
-        self.temp   = tempfile.TemporaryDirectory()
+        self.geo = emsclass.SimGeometry()
+        self.csx = ContinuousStructure()
+        self.tmp = tempfile.TemporaryDirectory()
 
         self._aext  = StlArgsExtractor()
         self._dext  = StlDataExtractor()
@@ -19,8 +19,6 @@ class BasicMaker(CSXMaker):
 
     def add_stl(self, istl: ImportedStl):
         self.logger.info(f"\n* Adding STL model {istl.filename} *")
-        fnargs = self._aext.get_filename_args(istl.filename)
-        self.logger.debug(f' STL filename args: {fnargs.keys()} {fnargs.values()}')
 
         dispatch = {
             USTRIP:    self._add_element,
@@ -30,10 +28,10 @@ class BasicMaker(CSXMaker):
             DUMP_BOX:  self._add_box
             }
 
-        dispatch.get(self.np.parsed[ELEMENT])(istl, fnargs)
+        dispatch.get(self.np.parsed[ELEMENT])(istl)
 
     def make_csx(self):
-        for e in self.simgeo.elements:
+        for e in self.geo.elements:
             self._draw_element(e)
 
     #def _add_rwgport(self, fdtd, filename, stl):
@@ -51,10 +49,10 @@ class BasicMaker(CSXMaker):
 
         e = emsclass.GeoEle()
         e.istl = istl
-        e.load_dict(self._aext.get_filename_args(istl.filename))
+        e.load_dict(self._aext.get_args(istl.filename))
         start, stop = self._dext.get_bbox(istl.stl_data)
         e.bbox = [start, stop]
-        self.simgeo.elements.append(e)
+        self.geo.elements.append(e)
         self.logger.debug(f'\n Data extractor output for "{e.name}" element '
                           f'\n Predicted bbox:\n {"-"*15}'
                           f'\n {start}\n {stop}')
@@ -68,22 +66,8 @@ class BasicMaker(CSXMaker):
             mat = self.csx.AddMaterial(ele.name)
         
         mat.SetColor(COLORS[ele.name])
-        
-        # ---------------------------------------------------------------------------- 
 
-        # This logic ported over from original project is suspicious:
-        # - This appears to trigger if an object is close enough to 2D
-        # - What it doesn't consider is that the bbox only encloses the geometry
-        # - I believe a 2D ustrip with 1/4 wave stub would just get turned into a box?
-        # - Probably just remove it.
-
-        #if np.any(np.isclose(ele.bbox[1] - ele.bbox[0], 0)):
-        #    mat.AddBox(ele.bbox[0], ele.bbox[1], priority=ele.priority)
-        #    self.logger.info(f'\n Drew box geometry for element "{ele.name}"')
-        
-        # ---------------------------------------------------------------------------- 
-
-        tfname = f'{self.temp.name}/{ele.name}_{ele.number}.stl'
+        tfname = f'{self.tmp.name}/{ele.name}_{ele.number}.stl'
         self.logger.debug(f'\n Stashing in "{tfname}" for PolyhedronReader')
 
         with open(tfname, 'wb') as f:
@@ -97,10 +81,21 @@ class BasicMaker(CSXMaker):
                           f'\n Actual bbox:\n {"-"*10}\n {np.array_str(prim.GetBoundBox(), precision=3, suppress_small=True)}')
 
     def _add_port(self, istl: ImportedStl):
-        ...
+        self.logger.info(f'\n* Adding PORT "{istl.filename}" to geometry *')
+
+        e = emsclass.Port()
+        e.istl = istl
+        e.load_dict(self._aext.get_args(istl.filename))
+        start, stop = self._dext.get_bbox(istl.stl_data)
+        e.bbox = [start, stop]
+        self.geo.ports.append(e)
+        self.logger.debug(f'\n Data extractor output for PORT "{e.name}" element '
+                          f'\n Predicted bbox:\n {"-"*15}'
+                          f'\n {start}\n {stop}')
 
     def _draw_port(self, ele):
-        ...
+        self.logger.info(f'\n* Drawing PORT {ele.name} element in CSXCAD *')
+
 
     def _add_box(self, istl: ImportedStl):
         ...
