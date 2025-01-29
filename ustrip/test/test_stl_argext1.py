@@ -13,6 +13,10 @@ BAD_ARGS  = ['ustrip', 'mat=silver', 'beef=1', 'n=2']
 GOOD_KEYS = ['element', 'mat', 'pri', 'n']
 GOOD_VALS = ['ustrip', 'silver', '1', '2']
 
+GOOD_PORT        = ['lumport', 'n=1', 'd=x', 'excite=0']
+GOOD_PORT_KEYS   = ['element', 'n', 'd', 'excite']
+GOOD_PORT_VALUES = ['lumport', '1', 'x', '0']
+
 class TestStlNameParserBasic(unittest.TestCase):
 
     @classmethod
@@ -53,6 +57,13 @@ class TestStlNameParserBasic(unittest.TestCase):
         r = self.uut.get_filename_args(' '.join(BAD_ARGS))
         self.assertFalse('beef' in r.keys())
         self.assertTrue('n' in r.keys())
+
+    def test_port_args(self):
+        r = self.uut.get_filename_args(' '.join(GOOD_PORT))
+        for k in GOOD_PORT_KEYS:
+            self.assertTrue(k in r.keys())
+        for v in GOOD_PORT_VALUES:
+            self.assertTrue(v in r.values())
 
 if __name__ == "__main__":
     unittest.main()
