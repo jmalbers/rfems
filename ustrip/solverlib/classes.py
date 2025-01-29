@@ -48,29 +48,25 @@ class GeoEle:
         self.priority = idict[PRIORITY] if PRIORITY in idict.keys() else None
         self.kappa    = idict[KAPPA]    if KAPPA    in idict.keys() else None
         self.epsilon  = idict[EPSILON]  if EPSILON  in idict.keys() else None
-        self.color    = idict[COLOR]    if COLOR  in idict.keys() else None
+        self.color    = idict[COLOR]    if COLOR    in idict.keys() else None
 
 class Port:
-    def __init__(self, bbox=None, **kw) -> None:
+    def __init__(self) -> None:
         self.name      = None
         self.number    = None
         self.direction = None
         self.zo        = None
         self.excite    = None
-        self.color = None
+        self.color     = None
 
-        self.bbox  = bbox
-        self.geo   = None
-        self.port  = None
+        self.istl      = None
+        self.bbox      = None
 
-        if 'init_dict' in kw.keys():
-            self._load_dict(kw['init_dict'])
-
-    def _load_dict(self, param):
-        self.name      = param[ELEMENT]   if ELEMENT   in param.keys() else None
-        self.number    = param[NUMBER]    if NUMBER    in param.keys() else None
-        self.direction = param[DIRECTION] if DIRECTION in param.keys() else None
-        self.z0        = param[Z0]        if Z0        in param.keys() else None
-        self.excite    = param[EXCITE]    if EXCITE    in param.keys() else None
+    def load_dict(self, idict):
+        self.name      = idict[ELEMENT]   if ELEMENT   in idict.keys() else None
+        self.number    = idict[NUMBER]    if NUMBER    in idict.keys() else None
+        self.direction = idict[DIRECTION] if DIRECTION in idict.keys() else None
+        self.z0        = idict[Z0]        if Z0        in idict.keys() else None
+        self.excite    = idict[EXCITE]    if EXCITE    in idict.keys() else None
 
 

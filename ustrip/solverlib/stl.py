@@ -149,34 +149,27 @@ class StlArgsExtractor:
 
     def get_filename_args(self, filename):
         fn = self._split_name(filename)
+
         if fn[0] not in ELEMENTS:
             raise TypeError(f"'{fn}' is invalid sim element.")
 
+        arg_list = []
         parsed = {}
         parsed.update({ELEMENT: fn[0]})
 
-        if parsed[ELEMENT] in PORT_TYPES:
-            return parsed.update(self.get_port_args(parsed))
+        if parsed[ELEMENT] in PORTS:
+            arg_list = PORT_ARGS
+        else: 
+            arg_list = FILENAME_ARGS
 
         for i in self._return_args(fn[1:]):
             a, v = self._get_argval(i)
-            if a in FILENAME_ARGS:
+            if a in arg_list:
                 parsed.update({a: v})
             else:
-                warnings.warn(f"'{a}={v}' is invalid sim element argument.")
+                warnings.warn(f"'{a}={v}' is invalid simulation element argument.")
 
         return parsed
-
-    def get_port_args(self, filename):
-        ret = {}
-        for i in self._return_args(filename):
-            a, v = self._get_argval(i)
-            if a in PORT_ARGS:
-                ret.update({a: v})
-            else:
-                warnings.warn(f"'{a}={v}' is invalid port argument.")
-
-        return ret
 
     def _return_args(self, split_name):
         return list(filter(lambda x: ARG_SEPERATOR in x, split_name))

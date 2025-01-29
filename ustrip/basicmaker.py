@@ -25,6 +25,9 @@ class BasicMaker(CSXMaker):
         dispatch = {
             USTRIP:    self._add_element,
             SUBSTRATE: self._add_element,
+            LUM_PORT:  self._add_port,
+            RWG_PORT:  self._add_port,
+            DUMP_BOX:  self._add_box
             }
 
         dispatch.get(self.np.parsed[ELEMENT])(istl, fnargs)
@@ -93,6 +96,14 @@ class BasicMaker(CSXMaker):
                           f'\n Vertices: {prim.GetNumVertices()}\n Faces: {prim.GetNumFaces()}'
                           f'\n Actual bbox:\n {"-"*10}\n {np.array_str(prim.GetBoundBox(), precision=3, suppress_small=True)}')
 
+    def _add_port(self, istl: ImportedStl):
+        ...
+
+    def _draw_port(self, ele):
+        ...
+
+    def _add_box(self, istl: ImportedStl):
+        ...
 
 
 

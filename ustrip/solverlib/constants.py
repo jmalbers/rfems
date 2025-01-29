@@ -16,7 +16,6 @@ MUR   = 'mur'
 PMC   = 'pmc'
 PML_8 = 'pml_8'
 BOUNDARY_CONDITIONS = [PEC, MUR, PMC, PML_8]
-USTRIP_BOUNDARY = PEC * 6
 
 # ------------------------------------------------------------------------------
 # 3D Model Constants
@@ -24,8 +23,8 @@ USTRIP_BOUNDARY = PEC * 6
 
 # STL Constants
 
-STL_TOL = .001  # mm
-STL_UNIT = 1e-3
+STL_TOL = .001  # 1 mm
+STL_UNIT = 1e-3 # 1 mm
 
 # Geometry ID Constants
      
@@ -46,14 +45,13 @@ SUBSTRATE = 'substrate'
 ENCLOSURE = 'enclosure'
 PART      = 'part'
 WIRE      = 'wire'
+CAVITY    = 'cavity'
 
     # Classifications
 ELEMENTS = [USTRIP, SUBSTRATE, PORT, RWG_PORT, LUM_PORT,
-            DUMP_BOX, ENCLOSURE, PART, WIRE]
+            DUMP_BOX, ENCLOSURE, PART, WIRE, CAVITY]
 PORTS    = [RWG_PORT, LUM_PORT, MSL_PORT]
 BOXES    = [DUMP_BOX, MESH_BOX]
-
-
 
 # ------------------------------------------------------------------------------
 # Metal Constants
@@ -161,4 +159,11 @@ PRIORITIES = {
     LUM_PORT: '',
     SUBSTRATE: '',
     USTRIP: '',
+}
+
+    # Misc Default Values
+DEFAULT_Z0 = 50
+DEFAULT_BCS = {
+    USTRIP: '',
+    CAVITY: PEC * 6
 }
