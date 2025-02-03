@@ -52,6 +52,7 @@ class BasicMaker(CSXMaker):
         e.load_dict(self._aext.get_args(istl.filename))
         start, stop = self._dext.get_bbox(istl.stl_data)
         e.bbox = [start, stop]
+        e.color = COLORS[e.name]
         self.geo.elements.append(e)
         self.logger.debug(f'\n Data extractor output for "{e.name}" element '
                           f'\n Predicted bbox:\n {"-"*15}'
@@ -65,7 +66,7 @@ class BasicMaker(CSXMaker):
         else: 
             mat = self.csx.AddMaterial(ele.name)
         
-        mat.SetColor(COLORS[ele.name])
+        mat.SetColor(ele.color)
 
         tfname = f'{self.tmp.name}/{ele.name}_{ele.number}.stl'
         self.logger.debug(f'\n Stashing in "{tfname}" for PolyhedronReader')
@@ -88,6 +89,7 @@ class BasicMaker(CSXMaker):
         e.load_dict(self._aext.get_args(istl.filename))
         start, stop = self._dext.get_bbox(istl.stl_data)
         e.bbox = [start, stop]
+        e.color = COLORS[e.name]
         self.geo.ports.append(e)
         self.logger.debug(f'\n Data extractor output for PORT "{e.name}" element '
                           f'\n Predicted bbox:\n {"-"*15}'
@@ -96,6 +98,7 @@ class BasicMaker(CSXMaker):
     def _draw_port(self, ele):
         self.logger.info(f'\n* Drawing PORT {ele.name} element in CSXCAD *')
 
+        # Might use this space to draw port helper? 
 
     def _add_box(self, istl: ImportedStl):
         ...

@@ -100,6 +100,8 @@ COLORS = {
     USTRIP:    "#b87333",
     SUBSTRATE: "#efdfbb",
     RWG_PORT:  "#56a0d3",
+    LUM_PORT:  "#56a0d3",
+    MSL_PORT:  "#56a0d3",
     RED:       "#ff0000",
     BLUE:      "#00bfff",
     GREEN:     "#4d5d53",

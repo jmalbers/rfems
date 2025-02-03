@@ -47,7 +47,6 @@ class GeoEle:
         self.priority = idict[PRIORITY] if PRIORITY in idict.keys() else None
         self.kappa    = idict[KAPPA]    if KAPPA    in idict.keys() else None
         self.epsilon  = idict[EPSILON]  if EPSILON  in idict.keys() else None
-        self.color    = idict[COLOR]    if COLOR    in idict.keys() else None
 
 class Port:
     def __init__(self) -> None:

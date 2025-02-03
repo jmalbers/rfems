@@ -67,7 +67,6 @@ class TestBasicMakerBasic(unittest.TestCase):
         istl = self.imp.import_stl(FILE_PATH + SUBSTRATE_FILE)
         istl.stl_data = self.imp._make_npdata(istl.stl_byio)
 
-        #logging.basicConfig(level=logging.DEBUG)
         self.uut._add_element(istl)
         self.uut.geo.elements[0].color = COLORS[SUBSTRATE]
         self.uut.geo.elements[0].priority = 1
