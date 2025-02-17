@@ -1,13 +1,16 @@
 import numpy as np
 from CSXCAD import ContinuousStructure
 from solverlib.classes import Mesher
+from classes import GeoEle, Port
 from solverlib.constants import STL_UNIT
+
+# To Do:
+# - Where does mesh live?
+# - Should mesher class have any properties? 
 
 class Mesher:
     def __init__(self) -> None:
         ...
-    def mesh_csx(self, csx):
-        raise NotImplementedError
 
 class BasicMesher(Mesher):
 
@@ -23,24 +26,31 @@ class BasicMesher(Mesher):
             Can probably use normal vector for something more 3D like resonators?
             """
 
-    def __init__(self, fmax) -> None:
-        # Sim Geometry Bounding Boxes
-        self.ustrip    = None
-        self.substrate = None
+    def __init__(self) -> None:
+        self.gunit = STL_UNIT
 
-        # Meshing Calculation Vars
-        self.fmax      = fmax
-        self.perm      = 3.0
-        self.grid_unit = STL_UNIT
-
-    def mesh_geo(self, geo):
+    def mesh_edges(self, ele: GeoEle, csx: ContinuousStructure):
+        ...
+    
+    def mesh_interior(self, ele: GeoEle, csx: ContinuousStructure):
         ...
 
-    def mesh_ustrip(self):
-        pass
+    def mesh_lumport(self, port: Port, csx: ContinuousStructure):
+        ...
 
-    def mesh_substrate(self):
-        pass
+    def mesh_rwgport(self, port: Port, csx: ContinuousStructure):
+            ...
+    
+    def mesh_mslport(self, port: Port, csx: ContinuousStructure):
+        ...
+
+    def mesh_substrate(self, ele: GeoEle, csx: ContinuousStructure):
+        ...
+    
+    def mesh_ustrip(self, ele: GeoEle, csx: ContinuousStructure):
+        ...
+
+
 
 
 
