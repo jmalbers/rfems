@@ -3,7 +3,13 @@ from CSXCAD import ContinuousStructure
 from solverlib.classes import Mesher
 from solverlib.constants import STL_UNIT
 
-class StripMesher(Mesher):
+class Mesher:
+    def __init__(self) -> None:
+        ...
+    def mesh_csx(self, csx):
+        raise NotImplementedError
+
+class BasicMesher(Mesher):
 
     """ Microstrip Mesher
 

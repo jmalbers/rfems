@@ -1,7 +1,7 @@
 import sys, unittest, logging
 
 sys.path.append("../")
-from basicmaker import BasicMaker
+from solverlib.maker import BasicMaker
 from solverlib.stl import StlImporter, StlArgsExtractor, StlDataExtractor
 from solverlib.constants import *
 
@@ -12,6 +12,7 @@ SUBSTRATE_FILE = 'substrate.stl'
 PORT_FILE      = 'lumport n=2 dir=z exc=0.stl'
 
 # Needs test for add_stl function
+# Test importing full model
 
 class TestBasicMakerBasic(unittest.TestCase):
 

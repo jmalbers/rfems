@@ -10,11 +10,7 @@ class Importer:
     def import_geo(self, filename):
         raise NotImplementedError
 
-class Mesher:
-    def __init__(self) -> None:
-        ...
-    def mesh_csx(self, csx):
-        raise NotImplementedError
+
 
 # ------------------------------------------------------------------------------
 # Simulation Geometry Classes
